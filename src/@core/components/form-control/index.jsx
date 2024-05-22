@@ -1,8 +1,7 @@
 import React from 'react'
 import Input from './Input'
 import PasswordInput from './password'
-// import PasswordInput from './PasswordInput';
-// import Select from "./Select";
+import SelectForm from './select'
 // import Textarea from './Textarea';
 // import Checkbox from './Checkbox';
 // import MultiSelect from './Select/Multi';
@@ -19,8 +18,8 @@ const FormControl = props => {
       return <Input {...rest} />
     // case 'simpleInput':
     //   return <SimpleInput {...rest} />;
-    // case 'select':
-    //   return <Select {...rest} />;
+    case 'select':
+      return <SelectForm control={props.control} {...rest} />
     // case 'multiSelect':
     //   return <MultiSelect {...rest} />;
     // case 'tags':

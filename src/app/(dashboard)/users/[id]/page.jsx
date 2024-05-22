@@ -3,6 +3,8 @@
 // React Imports
 
 // MUI Imports
+import { useEffect } from 'react'
+import { useParams, useRouter } from 'next/navigation'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
 import CardHeader from '@mui/material/CardHeader'
@@ -12,14 +14,13 @@ import CardContent from '@mui/material/CardContent'
 import { toast } from 'react-toastify'
 import { useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { object, minLength, string } from 'valibot'
+import { object, minLength, string, optional } from 'valibot'
+
 import FormControl from '@core/components/form-control'
 import CustomButton from '@core/components/button'
 import { useGetUserQuery, useUpdateUserMutation } from '@/redux-store/api/user'
-import { useParams, useRouter } from 'next/navigation'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
-import { useEffect } from 'react'
 
 const schema = object({
   username: string([
@@ -27,10 +28,9 @@ const schema = object({
     minLength(3, 'Username must be at least 3 characters long')
   ]),
 
-  password: string([
-    minLength(1, 'This field is required'),
-    minLength(8, 'Password must be at least 8 characters long')
-  ])
+  password: optional(
+    string([minLength(1, 'This field is required'), minLength(8, 'Password must be at least 8 characters long')])
+  )
 })
 
 const Update = () => {
@@ -38,8 +38,6 @@ const Update = () => {
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
   const { data: userData, isLoading, isError } = useGetUserQuery(id, { skip: id ? false : true })
   const router = useRouter()
-
-  console.log(userData, 'userdata...')
   // Hooks
   const {
     control,
@@ -57,6 +55,7 @@ const Update = () => {
   const onSubmit = async values => {
     try {
       const result = await updateUser({ id, data: values }).unwrap()
+
       console.log(result, 'user result')
       toast.success('User Updated Successfull')
       router.push('/users')

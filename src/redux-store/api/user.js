@@ -20,11 +20,11 @@ export const userApi = createApi({
       invalidatesTags: ['users']
     }),
     getUser: builder.query({
-      queryFn: id => queryFn(user_url + id)
+      queryFn: id => queryFn(`${user_url}${id}`)
     }),
     updateUser: builder.mutation({
       query: ({ id, data }) => ({
-        url: user_url + id + '/',
+        url: `${user_url}${id}/`,
         method: 'PATCH',
         body: data
       }),
@@ -32,7 +32,7 @@ export const userApi = createApi({
     }),
     deleteUser: builder.mutation({
       query: id => ({
-        url: user_url + id,
+        url: `${user_url}${id}/`,
         method: 'DELETE'
       }),
       invalidatesTags: ['users']

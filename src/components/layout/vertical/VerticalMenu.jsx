@@ -68,7 +68,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='main' icon={<i className='ri-dashboard-horizontal-fill' />}>
           Dashboard
         </MenuItem>
-        <MenuItem href='/purchases' icon={<i className='ri-collage-fill' />}>
+        <MenuItem href='/purchases' icon={<i className='ri-wallet-3-fill' />}>
           Purchases
         </MenuItem>
         <SubMenu label='Demo accounts' icon={<i className='ri-account-pin-circle-fill' />}>

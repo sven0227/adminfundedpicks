@@ -13,9 +13,12 @@ import { valibotResolver } from '@hookform/resolvers/valibot'
 import { object, nonOptional, string, number } from 'valibot'
 import FormControl from '@core/components/form-control'
 import CustomButton from '@core/components/button'
-import { useCreatePurchaseMutation } from '@/redux-store/api/purchase'
+import { useCreatePurchaseMutation, useGetPurchaseQuery, useUpdatePurchaseMutation } from '@/redux-store/api/purchase'
 import { useGetAllUsersQuery } from '@/redux-store/api/user'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import Loader from '@/components/loader'
+import Error from '@/components/error'
+import { useEffect } from 'react'
 
 const schema = object({
   user: nonOptional(string('This field is not a string'), 'This field is required'),
@@ -24,33 +27,53 @@ const schema = object({
 })
 
 const Create = () => {
-  const [createPurchase, { isLoading }] = useCreatePurchaseMutation()
+  const { id } = useParams()
+  const [updatePurchase, { isUpdating }] = useUpdatePurchaseMutation()
   const { data: usersData } = useGetAllUsersQuery()
+  const { data: purchaseData, isLoading, isError } = useGetPurchaseQuery(id, { skip: id ? false : true })
   const router = useRouter()
+
   // Hooks
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { errors }
   } = useForm({
     resolver: valibotResolver(schema)
   })
 
+  useEffect(() => {
+    if (purchaseData) {
+      setValue('product', purchaseData?.product)
+      setValue('amount', purchaseData?.amount)
+      setValue('user', purchaseData?.user)
+    }
+  }, [purchaseData])
+
   const onSubmit = async values => {
     console.log(values, 'values...')
     try {
-      const result = await createPurchase(values).unwrap()
+      const result = await updatePurchase({ id, data: values }).unwrap()
       console.log(result, 'user result')
-      toast.success('Purchase Created Successfully')
+      toast.success('Purchase Updated Successfully')
       router.push('/purchases')
     } catch (error) {
       console.log(error)
     }
   }
 
+  if (isLoading) {
+    return <Loader />
+  }
+
+  if (isError) {
+    return <Error />
+  }
+
   return (
     <Card>
-      <CardHeader title='Create Purchase' />
+      <CardHeader title='Update Purchase' />
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Grid container spacing={5}>
@@ -58,6 +81,7 @@ const Create = () => {
               <FormControl
                 control={control}
                 errors={errors.user}
+                value={purchaseData?.user || ''}
                 inputType='select'
                 label='User'
                 name='user'
@@ -93,7 +117,13 @@ const Create = () => {
               />
             </Grid>
             <Grid item xs={12} className='flex justify-end gap-4'>
-              <CustomButton isLoading={isLoading} variant='contained' type='submit' text='Submit' />
+              <CustomButton
+                disabled={isLoading || isUpdating}
+                isLoading={isLoading || isUpdating}
+                variant='contained'
+                type='submit'
+                text='Submit'
+              />
             </Grid>
           </Grid>
         </form>

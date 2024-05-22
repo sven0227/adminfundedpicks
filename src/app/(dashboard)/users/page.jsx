@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
-import TextField from '@mui/material/TextField'
+
 import Tooltip from '@mui/material/Tooltip'
 import TablePagination from '@mui/material/TablePagination'
 
@@ -36,23 +36,17 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
-
-// Util Imports
-import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
+import { Grid } from '@mui/material'
+import moment from 'moment/moment'
+import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { Grid } from '@mui/material'
 import { useDeleteUserMutation, useGetAllUsersQuery } from '@/redux-store/api/user'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
-import { format, parse } from 'date-fns'
-import moment from 'moment/moment'
 import WarningModal from '@/components/modal/warning'
-import { toast } from 'react-toastify'
+import DebouncedInput from '@/components/debounced-input'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -67,39 +61,10 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
-const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
-  // States
-  const [value, setValue] = useState(initialValue)
-
-  useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
-
-  return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
-}
-
-// Vars
-const invoiceStatusObj = {
-  Sent: { color: 'secondary', icon: 'ri-send-plane-2-line' },
-  Paid: { color: 'success', icon: 'ri-check-line' },
-  Draft: { color: 'primary', icon: 'ri-mail-line' },
-  'Partial Payment': { color: 'warning', icon: 'ri-pie-chart-2-line' },
-  'Past Due': { color: 'error', icon: 'ri-information-line' },
-  Downloaded: { color: 'info', icon: 'ri-arrow-down-line' }
-}
-
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const UserTable = () => {
+const Users = () => {
   // States
   const [rowSelection, setRowSelection] = useState({})
   const [showDeleteModal, setShowDeleteModal] = useState(false)
@@ -108,9 +73,6 @@ const UserTable = () => {
   const [selectedUserId, setSelectedUserId] = useState('')
 
   const [globalFilter, setGlobalFilter] = useState('')
-
-  // Hooks
-  const { lang: locale } = useParams()
 
   const columns = useMemo(
     () => [
@@ -247,8 +209,6 @@ const UserTable = () => {
     return <Error />
   }
 
-  console.log(table.getRowModel(), 'table...')
-
   // delete handler
 
   const deleteUserHandler = async () => {
@@ -260,6 +220,7 @@ const UserTable = () => {
       console.log(error)
     }
   }
+
   return (
     <>
       <WarningModal
@@ -349,7 +310,7 @@ const UserTable = () => {
               rowsPerPageOptions={[10, 25, 50]}
               component='div'
               className='border-bs'
-              count={[].length}
+              count={usersData ? usersData.length : []}
               rowsPerPage={table.getState().pagination.pageSize}
               page={table.getState().pagination.pageIndex}
               onPageChange={(_, page) => {
@@ -364,4 +325,4 @@ const UserTable = () => {
   )
 }
 
-export default UserTable
+export default Users

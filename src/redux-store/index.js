@@ -7,14 +7,14 @@ import calendarReducer from '@/redux-store/slices/calendar'
 import kanbanReducer from '@/redux-store/slices/kanban'
 import { userApi } from './api/user'
 import userDataSlice from './slices/user'
-// import { purchaseApi } from './api/purchase'
+import { purchaseApi } from './api/purchase'
 // import { betApi } from './api/bet'
 
 export const store = configureStore({
   reducer: {
     [userApi.reducerPath]: userApi.reducer,
     user: userDataSlice,
-    // [purchaseApi.reducerPath]: purchaseApi.reducer,
+    [purchaseApi.reducerPath]: purchaseApi.reducer,
     // [betApi.reducerPath]: betApi.reducer,
     chatReducer,
     calendarReducer,
@@ -22,8 +22,8 @@ export const store = configureStore({
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ serializableCheck: false }).concat([
-      userApi.middleware
-      // purchaseApi.middleware,
+      userApi.middleware,
+      purchaseApi.middleware
       // betApi.middleware
     ])
 })

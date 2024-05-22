@@ -8,19 +8,10 @@ export const purchaseApi = createApi({
   tagTypes: ['purchases', 'purchase'],
   endpoints: builder => ({
     getAllPurchases: builder.query({
-      query: () => queryFn(purchase_url)
+      queryFn: () => queryFn(purchase_url),
+      providesTags: ['purchases']
     }),
     createPurchase: builder.mutation({
-      query: data => ({
-        url: purchase_url,
-        method: 'POST',
-        body: data
-      })
-    }),
-    getPurchase: builder.query({
-      queryFn: () => queryFn(purchase_url)
-    }),
-    updatePurchase: builder.mutation({
       query: data => ({
         url: purchase_url,
         method: 'POST',
@@ -28,13 +19,23 @@ export const purchaseApi = createApi({
       }),
       invalidatesTags: ['purchases', 'purchase']
     }),
+    getPurchase: builder.query({
+      queryFn: id => queryFn(`${purchase_url}${id}`)
+    }),
+    updatePurchase: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `${purchase_url}${id}/`,
+        method: 'PATCH',
+        body: data
+      }),
+      invalidatesTags: ['purchases', 'purchase']
+    }),
     deletePurchase: builder.mutation({
-      query: data => ({
-        url: purchase_url,
-        method: 'POST',
-        body: data,
-        invalidatesTags: ['purchases']
-      })
+      query: id => ({
+        url: `${purchase_url}${id}/`,
+        method: 'DELETE'
+      }),
+      invalidatesTags: ['purchases']
     })
   })
 })
