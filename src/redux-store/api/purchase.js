@@ -1,10 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { base_url, purchase_url } from '../../utils/apiUrls'
+import { base_url, getAuthToken, purchase_url } from '../../utils/apiUrls'
 import { queryFn } from '@/utils'
 
 export const purchaseApi = createApi({
   reducerPath: 'purchaseApi',
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: base_url,
+    headers: {
+      Authorization: getAuthToken()
+    }
+  }),
   tagTypes: ['purchases', 'purchase'],
   endpoints: builder => ({
     getAllPurchases: builder.query({

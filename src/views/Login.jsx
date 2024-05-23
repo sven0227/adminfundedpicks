@@ -1,26 +1,16 @@
 'use client'
 
-// React Imports
-import { useState } from 'react'
-
 // Next Imports
 import Link from 'next/link'
 import { useParams, useRouter, useSearchParams } from 'next/navigation'
 
 // MUI Imports
 import Typography from '@mui/material/Typography'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import InputAdornment from '@mui/material/InputAdornment'
 import Checkbox from '@mui/material/Checkbox'
-import Button from '@mui/material/Button'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Divider from '@mui/material/Divider'
-import Alert from '@mui/material/Alert'
 
 // Third-party Imports
-import { signIn } from 'next-auth/react'
-import { Controller, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { object, minLength, string, email } from 'valibot'
 import classnames from 'classnames'
@@ -28,28 +18,32 @@ import classnames from 'classnames'
 // Component Imports
 import Logo from '@components/layout/shared/Logo'
 
-// Config Imports
-import themeConfig from '@configs/themeConfig'
-
 // Hook Imports
 import { useImageVariant } from '@core/hooks/useImageVariant'
 import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
-import { getLocalizedUrl } from '@/utils/i18n'
+import { useLoginMutation } from '@/redux-store/api/auth'
+import CustomButton from '@/@core/components/button'
+import FormControl from '@core/components/form-control'
+import { toast } from 'react-toastify'
+import { auth_token_key } from '@/utils/apiUrls'
+import isAuth from '@/components/isAuth'
 
 const schema = object({
-  email: string([minLength(1, 'This field is required'), email('Email is invalid')]),
+  username: string([
+    minLength(1, 'This field is required'),
+    minLength(3, 'Username must be at least 3 characters long')
+  ]),
+
   password: string([
     minLength(1, 'This field is required'),
-    minLength(5, 'Password must be at least 5 characters long')
+    minLength(4, 'Password must be at least 4 characters long')
   ])
 })
 
 const Login = ({ mode }) => {
   // States
-  const [isPasswordShown, setIsPasswordShown] = useState(false)
-  const [errorState, setErrorState] = useState(null)
 
   // Vars
   const darkImg = '/images/pages/auth-v2-mask-1-dark.png'
@@ -61,8 +55,7 @@ const Login = ({ mode }) => {
 
   // Hooks
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const { lang: locale } = useParams()
+  const [login, { isLoading }] = useLoginMutation()
   const { settings } = useSettings()
 
   const {
@@ -72,8 +65,8 @@ const Login = ({ mode }) => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      email: 'admin@materialize.com',
-      password: 'admin'
+      username: '',
+      password: ''
     }
   })
 
@@ -87,10 +80,17 @@ const Login = ({ mode }) => {
     borderedDarkIllustration
   )
 
-  const handleClickShowPassword = () => setIsPasswordShown(show => !show)
-
-  const onSubmit = () => {
-    router.push('/main')
+  const onSubmit = async values => {
+    try {
+      const result = await login(values).unwrap()
+      console.log(result, 'login result')
+      toast.success('User Logged in successfully')
+      localStorage.setItem(auth_token_key, result.token)
+      localStorage.setItem('profile', JSON.stringify(result))
+      router.push('/main')
+    } catch ({ data }) {
+      toast.error(data.error)
+    }
   }
 
   return (
@@ -125,60 +125,20 @@ const Login = ({ mode }) => {
             onSubmit={handleSubmit(onSubmit)}
             className='flex flex-col gap-5'
           >
-            <Controller
-              name='email'
+            <FormControl
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  autoFocus
-                  type='email'
-                  label='Email'
-                  onChange={e => {
-                    field.onChange(e.target.value)
-                    errorState !== null && setErrorState(null)
-                  }}
-                  {...((errors.email || errorState !== null) && {
-                    error: true,
-                    helperText: errors?.email?.message || errorState?.message[0]
-                  })}
-                />
-              )}
+              label='User Name'
+              name='username'
+              placeholder='Enter username'
+              {...(errors.username && { error: true, helperText: errors.username.message })}
             />
-            <Controller
-              name='password'
+            <FormControl
+              inputType='password'
               control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label='Password'
-                  id='login-password'
-                  type={isPasswordShown ? 'text' : 'password'}
-                  onChange={e => {
-                    field.onChange(e.target.value)
-                    errorState !== null && setErrorState(null)
-                  }}
-                  InputProps={{
-                    endAdornment: (
-                      <InputAdornment position='end'>
-                        <IconButton
-                          edge='end'
-                          onClick={handleClickShowPassword}
-                          onMouseDown={e => e.preventDefault()}
-                          aria-label='toggle password visibility'
-                        >
-                          <i className={isPasswordShown ? 'ri-eye-off-line' : 'ri-eye-line'} />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                  {...(errors.password && { error: true, helperText: errors.password.message })}
-                />
-              )}
+              label='Password'
+              name='password'
+              placeholder='Enter Password'
+              {...(errors.password && { error: true, helperText: errors.password.message })}
             />
             <div className='flex justify-between items-center flex-wrap gap-x-3 gap-y-1'>
               <FormControlLabel control={<Checkbox defaultChecked />} label='Remember me' />
@@ -186,9 +146,7 @@ const Login = ({ mode }) => {
                 Forgot password?
               </Typography>
             </div>
-            <Button fullWidth variant='contained' type='submit'>
-              Log In
-            </Button>
+            <CustomButton isLoading={isLoading} text='Login' />
           </form>
         </div>
       </div>

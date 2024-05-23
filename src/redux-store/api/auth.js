@@ -1,23 +1,13 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import {
-  base_url,
-  change_password_url,
-  getAuthToken,
-  industry_url,
-  login_url,
-  register_url,
-  send_reset_password_otp_url,
-  verify_reset_password_otp_url
-} from '../../utils/apiUrls'
+import { base_url, getAuthToken, login_url, register_url } from '../../utils/apiUrls'
 
 export const authApi = createApi({
   reducerPath: 'authApi',
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: base_url
+  }),
   tagTypes: ['Auth'],
   endpoints: builder => ({
-    getIndustries: builder.query({
-      query: () => industry_url
-    }),
     logout: builder.query({
       query: () => ({
         url: 'auth/logout',
@@ -36,27 +26,6 @@ export const authApi = createApi({
     login: builder.mutation({
       query: data => ({
         url: login_url,
-        method: 'POST',
-        body: data
-      })
-    }),
-    sendResetPasswordOtp: builder.mutation({
-      query: data => ({
-        url: send_reset_password_otp_url,
-        method: 'POST',
-        body: data
-      })
-    }),
-    newPassword: builder.mutation({
-      query: data => ({
-        url: change_password_url,
-        method: 'POST',
-        body: data
-      })
-    }),
-    verifyOtp: builder.mutation({
-      query: data => ({
-        url: verify_reset_password_otp_url,
         method: 'POST',
         body: data
       })

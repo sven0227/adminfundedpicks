@@ -81,8 +81,11 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='/withdrawal-profit' icon={<i className='ri-archive-drawer-fill' />}>
           Withdrawals Profit
         </MenuItem>
-        <MenuItem href='/users' icon={<i className='ri-user-2-fill' />}>
+        <MenuItem href='/users' icon={<i className='ri-user-3-fill' />}>
           Users
+        </MenuItem>
+        <MenuItem href='/bets' icon={<i className='ri-sort-alphabet-asc' />}>
+          Bets
         </MenuItem>
         <SubMenu label='Reports' icon={<i className='ri-git-repository-fill' />}>
           <MenuItem href='/report/spenders'>Top spenders</MenuItem>

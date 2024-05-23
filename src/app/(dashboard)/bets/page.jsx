@@ -36,18 +36,17 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
-import { Box, DialogContent, DialogTitle, Divider, Grid, Paper, Stack } from '@mui/material'
+import { Grid } from '@mui/material'
 import moment from 'moment/moment'
 import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { useDeleteUserMutation, useGetAllUsersQuery } from '@/redux-store/api/user'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import DebouncedInput from '@/components/debounced-input'
-import CustomModal from '@/components/modal'
+import { useDeleteBetMutation, useGetAllBetsQuery } from '@/redux-store/api/bet'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -65,16 +64,15 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const Users = () => {
+const Bets = () => {
   // States
   const [rowSelection, setRowSelection] = useState({})
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const { data: usersData, isLoading, isError } = useGetAllUsersQuery()
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
-  const [selectedUserId, setSelectedUserId] = useState('')
-  const [showDetailModal, setShowDetailModal] = useState(false)
+  const { data: betsData, isLoading, isError } = useGetAllBetsQuery()
+  const [deletePurchase, { isLoading: isDeleting }] = useDeleteBetMutation()
+  const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
+
   const [globalFilter, setGlobalFilter] = useState('')
-  const [selectedUser, setSelectedUser] = useState(null)
 
   const columns = useMemo(
     () => [
@@ -100,39 +98,39 @@ const Users = () => {
       //     />
       //   )
       // },
-      columnHelper.accessor('invoiceStatus', {
-        header: 'Username',
+      columnHelper.accessor('user', {
+        header: 'User',
         cell: ({ row }) => {
-          return <Typography variant='body2'>{row.original.username}</Typography>
+          return <Typography variant='body2'>N/A</Typography>
         }
       }),
-      columnHelper.accessor('name', {
-        header: 'Email',
-        cell: ({ row }) => <Typography variant='body2'>{row.original.email}</Typography>
+      columnHelper.accessor('team', {
+        header: 'Team',
+        cell: ({ row }) => <Typography variant='body2'>{row?.original?.team || 'N/A'}</Typography>
       }),
-      columnHelper.accessor('total', {
-        header: 'Funds',
-        cell: ({ row }) => <Typography>{`$${row.original.funds}`}</Typography>
+      columnHelper.accessor('Other Team', {
+        header: 'Other Team',
+        cell: ({ row }) => <Typography>{row?.original?.other_team}</Typography>
       }),
-      columnHelper.accessor('issuedDate', {
-        header: 'Date Joined',
-        cell: ({ row }) => <Typography>{moment(row.original.date_joined).format('DD-MM-YYYY ')}</Typography>
+      columnHelper.accessor('price', {
+        header: 'Price',
+        cell: ({ row }) => <Typography>${row?.original?.price || 'N/A'}</Typography>
+      }),
+      columnHelper.accessor('stake', {
+        header: 'Stake',
+        cell: ({ row }) => <Typography>${row.original.stake}</Typography>
       }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center gap-0.5'>
-            <IconButton
-              size='small'
-              onClick={() => {
-                setShowDetailModal(true)
-                setSelectedUser(row.original)
-              }}
-            >
-              <i className='ri-eye-line text-textSecondary' />
+            <IconButton size='small'>
+              {/* <Link href={`/apps/invoice/preview/${row.original.id}`} className='flex'>
+                <i className='ri-eye-line text-textSecondary' />
+              </Link> */}
             </IconButton>
             <IconButton size='small'>
-              <Link href={`/users/${row.original.id}`} className='flex'>
+              <Link href={`/bets/${row.original.id}`} className='flex'>
                 <i className='ri-pencil-line text-textSecondary' />
               </Link>
             </IconButton>
@@ -140,7 +138,7 @@ const Users = () => {
               size='small'
               onClick={() => {
                 setShowDeleteModal(true)
-                setSelectedUserId(row.original.id)
+                setSelectedPurchaseId(row.original.id)
               }}
             >
               <i className='ri-delete-bin-7-line text-textSecondary' />
@@ -155,7 +153,7 @@ const Users = () => {
   )
 
   const table = useReactTable({
-    data: usersData ? usersData : [],
+    data: betsData ? betsData : [],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -183,20 +181,6 @@ const Users = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  const getAvatar = params => {
-    // Vars
-    // const { avatar, name } = params
-    // if (avatar) {
-    //   return <CustomAvatar src={avatar} skin='light' size={34} />
-    // } else {
-    //   return (
-    //     <CustomAvatar skin='light' size={34}>
-    //       {/* {getInitials(name)} */}
-    //     </CustomAvatar>
-    //   )
-    // }
-  }
-
   // useEffect(() => {
   //   const filteredData = []?.filter(invoice => {
   //     if (status && invoice.invoiceStatus.toLowerCase().replace(/\s+/g, '-') !== status) return false
@@ -217,11 +201,11 @@ const Users = () => {
 
   // delete handler
 
-  const deleteUserHandler = async () => {
+  const deletePurchaseHandler = async () => {
     try {
-      await deleteUser(selectedUserId).unwrap()
+      await deletePurchase(selectedPurchaseId).unwrap()
       setShowDeleteModal(false)
-      toast('User deleted')
+      toast.success('Bet deleted')
     } catch (error) {
       console.log(error)
     }
@@ -233,22 +217,8 @@ const Users = () => {
         open={showDeleteModal}
         setOpen={setShowDeleteModal}
         isLoading={isDeleting}
-        deleteHandler={deleteUserHandler}
+        deleteHandler={deletePurchaseHandler}
       />
-      <CustomModal fullWidth maxWidth='sm' open={showDetailModal} setOpen={setShowDetailModal}>
-        <Box>
-          <DialogTitle variant='h5'>User Information</DialogTitle>
-          <DialogContent>
-            <Stack spacing={2}>
-              <Info title='Username' subtitle={selectedUser?.username} />
-              <Info title='Email' subtitle={selectedUser?.email} />
-              <Info title='Funds' subtitle={`$${selectedUser?.funds}`} />
-              <Info title='Account Value' subtitle={`$${selectedUser?.account_value}`} />
-            </Stack>
-          </DialogContent>
-        </Box>
-      </CustomModal>
-
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -257,10 +227,10 @@ const Users = () => {
                 variant='contained'
                 component={Link}
                 startIcon={<i className='ri-add-line' />}
-                href='/users/create'
+                href='/bets/create'
                 className='is-full sm:is-auto'
               >
-                Create User
+                Create Bet
               </Button>
               <div className='flex items-center flex-col sm:flex-row is-full sm:is-auto gap-4'>
                 <DebouncedInput
@@ -330,13 +300,13 @@ const Users = () => {
               rowsPerPageOptions={[10, 25, 50]}
               component='div'
               className='border-bs'
-              count={usersData ? usersData.length : []}
+              count={betsData ? betsData.length : 0}
               rowsPerPage={table.getState().pagination.pageSize}
               page={table.getState().pagination.pageIndex}
               onPageChange={(_, page) => {
                 table.setPageIndex(page)
               }}
-              onRowsPerPageChange={e => console.log(e, 'in ...')}
+              onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
             />
           </Card>
         </Grid>
@@ -345,16 +315,4 @@ const Users = () => {
   )
 }
 
-export default Users
-
-const Info = ({ title, subtitle }) => {
-  return (
-    <>
-      <Box display='flex' width='100%' justifyContent='space-between'>
-        <Typography className='h4'>{title}</Typography>
-        <Typography className='h6'>{subtitle}</Typography>
-      </Box>
-      <Divider />
-    </>
-  )
-}
+export default Bets

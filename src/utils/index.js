@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { toast } from 'react-toastify'
-import { auth_token_key, base_url } from './apiUrls'
+import { auth_token_key, base_url, getAuthToken } from './apiUrls'
 // import { userApi } from '@/redux-store/api/user'
 // import { store } from '@/redux-store'
 
@@ -56,9 +56,9 @@ export const getDateTime = timeStamp => {
 export const queryFn = async url => {
   try {
     const result = await axios(base_url + url, {
-      // headers: {
-      //   Authorization: getAuthToken()
-      // }
+      headers: {
+        Authorization: getAuthToken()
+      }
     })
     return { data: result.data }
   } catch (axiosError) {

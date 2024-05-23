@@ -17,7 +17,6 @@ import FormControl from '@core/components/form-control'
 import CustomButton from '@core/components/button'
 import { useCreateUserMutation } from '@/redux-store/api/user'
 import { useRouter } from 'next/navigation'
-import { useSelector } from 'react-redux'
 
 const schema = object({
   username: string([
@@ -27,13 +26,12 @@ const schema = object({
 
   password: string([
     minLength(1, 'This field is required'),
-    minLength(8, 'Password must be at least 8 characters long')
+    minLength(4, 'Password must be at least 8 characters long')
   ])
 })
 
 const CreateUser = () => {
   const [createUser, { isLoading }] = useCreateUserMutation()
-  const { data } = useSelector(state => state.user)
   const router = useRouter()
 
   // Hooks

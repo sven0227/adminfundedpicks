@@ -1,10 +1,15 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { base_url, user_url } from '../../utils/apiUrls'
+import { base_url, getAuthToken, user_url } from '../../utils/apiUrls'
 import { queryFn } from '@/utils'
 
 export const userApi = createApi({
   reducerPath: 'userApi',
-  baseQuery: fetchBaseQuery({ baseUrl: base_url }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: base_url,
+    headers: {
+      Authorization: getAuthToken()
+    }
+  }),
   tagTypes: ['users', 'user'],
   endpoints: builder => ({
     getAllUsers: builder.query({
