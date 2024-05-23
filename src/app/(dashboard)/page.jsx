@@ -17,26 +17,45 @@ const DashboardAnalytics = () => {
 
   return (
     <Grid container spacing={6}>
-      {[1, 2, 3].map(() => (
-        <Grid item xs={12} sm={6} md={4}>
-          <CardStatVertical
-            stats='155k'
-            avatarColor='primary'
-            trendNumber='22%'
-            title='Total Orders'
-            chipText='Last 4 Month'
-            avatarIcon='ri-shopping-cart-line'
-            avatarSkin='light'
-            chipColor='secondary'
-          />
-        </Grid>
-      ))}
-
-      <Grid item xs={12} md={8}>
-        <TotalTransactions serverMode={serverMode} />
+      <Grid item xs={12} sm={6} md={4}>
+        <CardStatVertical
+          stats='100k'
+          avatarColor='primary'
+          trendNumber='10%'
+          title='Total Purchases'
+          chipText='Last 4 Month'
+          avatarIcon='ri-shopping-cart-line'
+          avatarSkin='light'
+          chipColor='secondary'
+        />
       </Grid>
       <Grid item xs={12} sm={6} md={4}>
-        <Performance serverMode={serverMode} />
+        <CardStatVertical
+          stats='10k'
+          avatarColor='primary'
+          trendNumber='10%'
+          title='Total Users'
+          chipText='Last 4 Month'
+          avatarIcon='ri-shopping-cart-line'
+          avatarSkin='light'
+          chipColor='secondary'
+        />
+      </Grid>
+      <Grid item xs={12} sm={6} md={4}>
+        <CardStatVertical
+          stats='5k'
+          avatarColor='primary'
+          trendNumber='10%'
+          title='Total Bets'
+          chipText='Last 4 Month'
+          avatarIcon='ri-shopping-cart-line'
+          avatarSkin='light'
+          chipColor='secondary'
+        />
+      </Grid>
+
+      <Grid item xs={12} md={12}>
+        <TotalTransactions serverMode={serverMode} />
       </Grid>
 
       <Grid item xs={12} md={8}>
