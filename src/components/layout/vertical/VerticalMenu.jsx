@@ -65,7 +65,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         renderExpandedMenuItemIcon={{ icon: <i className='ri-circle-fill' /> }}
         menuSectionStyles={menuSectionStyles(verticalNavOptions, theme)}
       >
-        <MenuItem href='main' icon={<i className='ri-dashboard-horizontal-fill' />}>
+        <MenuItem href='/' icon={<i className='ri-dashboard-horizontal-fill' />}>
           Dashboard
         </MenuItem>
         <MenuItem href='/purchases' icon={<i className='ri-wallet-3-fill' />}>

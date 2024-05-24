@@ -146,7 +146,7 @@ const Users = () => {
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
             <IconButton size='small'>
-              <Link href={`/users/bets/${row.original.id}`} className='flex'>
+              <Link href={`/users/bets/${row.original.id}`} className='flex' title='Bets'>
                 <i className='ri-cash-line' />
               </Link>
             </IconButton>
@@ -245,10 +245,15 @@ const Users = () => {
           <DialogTitle variant='h5'>User Information</DialogTitle>
           <DialogContent>
             <Stack spacing={2}>
+              <Info title='First Name' subtitle={selectedUser?.first_name || 'N/A'} />
+              <Info title='Last Name' subtitle={selectedUser?.last_name || 'N/A'} />
               <Info title='Username' subtitle={selectedUser?.username} />
               <Info title='Email' subtitle={selectedUser?.email} />
               <Info title='Funds' subtitle={`$${selectedUser?.funds}`} />
               <Info title='Account Value' subtitle={`$${selectedUser?.account_value}`} />
+              <Info title='City' subtitle={`${selectedUser?.city || 'N/A'}`} />
+              <Info title='Country' subtitle={`${selectedUser?.country || 'N/A'}`} />
+              <Info title='Active' subtitle={`${selectedUser?.is_active ? 'Yes' : 'No'}`} />
             </Stack>
           </DialogContent>
         </Box>
@@ -305,7 +310,7 @@ const Users = () => {
                     </tr>
                   ))}
                 </thead>
-                {table.length === 0 ? (
+                {table.getFilteredRowModel().rows.length === 0 ? (
                   <tbody>
                     <tr>
                       <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>

@@ -28,6 +28,8 @@ import { useSettings } from '@core/hooks/useSettings'
 
 // Util Imports
 import { getLocalizedUrl } from '@/utils/i18n'
+import { removeLoginData } from '@/utils'
+import { toast } from 'react-toastify'
 
 // Styled component for badge content
 const BadgeContentSpan = styled('span')({
@@ -71,11 +73,18 @@ const UserDropdown = () => {
   const handleUserLogout = async () => {
     try {
       // Redirect to login page
+      toast.error('User logout successfully')
+      removeLoginData()
       router.push('/login')
     } catch (error) {
       console.error(error)
     }
   }
+
+  const profile =
+    typeof window !== 'undefined' && localStorage.getItem('profile')
+      ? JSON.parse(localStorage.getItem('profile'))
+      : null
 
   return (
     <>
@@ -116,30 +125,15 @@ const UserDropdown = () => {
               <ClickAwayListener onClickAway={e => handleDropdownClose(e)}>
                 <MenuList>
                   <div className='flex items-center plb-2 pli-4 gap-2' tabIndex={-1}>
-                    <Avatar alt={session?.user?.name || ''} src={session?.user?.image || ''} />
+                    <Avatar alt={''} src={''} />
                     <div className='flex items-start flex-col'>
-                      <Typography variant='body2' className='font-medium' color='text.primary'>
-                        {session?.user?.name || ''}
-                      </Typography>
-                      <Typography variant='caption'>{session?.user?.email || ''}</Typography>
+                      <Typography variant='caption'>{profile?.email || ''}</Typography>
                     </div>
                   </div>
                   <Divider className='mlb-1' />
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
+                  {/* <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/user-profile')}>
                     <i className='ri-user-3-line' />
                     <Typography color='text.primary'>My Profile</Typography>
-                  </MenuItem>
-                  {/* <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/account-settings')}>
-                    <i className='ri-settings-4-line' />
-                    <Typography color='text.primary'>Settings</Typography>
-                  </MenuItem>
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/pricing')}>
-                    <i className='ri-money-dollar-circle-line' />
-                    <Typography color='text.primary'>Pricing</Typography>
-                  </MenuItem>
-                  <MenuItem className='gap-3 pli-4' onClick={e => handleDropdownClose(e, '/pages/faq')}>
-                    <i className='ri-question-line' />
-                    <Typography color='text.primary'>FAQ</Typography>
                   </MenuItem> */}
                   <div className='flex items-center plb-1.5 pli-4'>
                     <Button

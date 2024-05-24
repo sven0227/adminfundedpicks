@@ -130,11 +130,11 @@ const Purchases = () => {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center gap-0.5'>
-            <IconButton size='small'>
+            {/* <IconButton size='small'>
               <Link href={`/apps/invoice/preview/${row.original.id}`} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
-            </IconButton>
+            </IconButton> */}
             <IconButton size='small'>
               <Link href={`/purchases/${row.original.id}`} className='flex'>
                 <i className='ri-pencil-line text-textSecondary' />
@@ -276,7 +276,7 @@ const Purchases = () => {
                     </tr>
                   ))}
                 </thead>
-                {table.length === 0 ? (
+                {table.getFilteredRowModel().rows.length === 0 ? (
                   <tbody>
                     <tr>
                       <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>

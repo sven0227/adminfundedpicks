@@ -86,36 +86,17 @@ const Bets = () => {
 
   const columns = useMemo(
     () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: row.getIsSelected(),
-      //         disabled: !row.getCanSelect(),
-      //         indeterminate: row.getIsSomeSelected(),
-      //         onChange: row.getToggleSelectedHandler()
-      //       }}
-      //     />
-      //   )
-      // },
-
       columnHelper.accessor('team', {
         header: 'Team',
-        cell: ({ row }) => <Typography variant='body2'>{row?.original?.team || 'N/A'}</Typography>
+        cell: ({ row }) => <Typography>{row?.original?.team || 'N/A'}</Typography>
       }),
       columnHelper.accessor('Other Team', {
         header: 'Other Team',
         cell: ({ row }) => <Typography>{row?.original?.other_team}</Typography>
+      }),
+      columnHelper.accessor('type', {
+        header: 'Type',
+        cell: ({ row }) => <Typography>{row?.original?.type || 'N/A'}</Typography>
       }),
       columnHelper.accessor('price', {
         header: 'Price',
@@ -124,6 +105,18 @@ const Bets = () => {
       columnHelper.accessor('stake', {
         header: 'Stake',
         cell: ({ row }) => <Typography>${row.original.stake}</Typography>
+      }),
+      columnHelper.accessor('result', {
+        header: 'Result',
+        cell: ({ row }) => (
+          <Chip
+            variant='tonal'
+            className='capitalize'
+            label={row?.original?.result}
+            color={row?.original?.result == 'lost' ? 'error' : 'success'}
+            size='small'
+          />
+        )
       })
     ],
     // eslint-disable-next-line react-hooks/exhaustive-deps

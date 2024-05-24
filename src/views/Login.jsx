@@ -29,6 +29,7 @@ import FormControl from '@core/components/form-control'
 import { toast } from 'react-toastify'
 import { auth_token_key } from '@/utils/apiUrls'
 import isAuth from '@/components/isAuth'
+import { useEffect } from 'react'
 
 const schema = object({
   username: string([
@@ -58,6 +59,11 @@ const Login = ({ mode }) => {
   const [login, { isLoading }] = useLoginMutation()
   const { settings } = useSettings()
 
+  useEffect(() => {
+    if (localStorage.getItem('profile')) {
+      router.push('/')
+    }
+  }, [])
   const {
     control,
     handleSubmit,
@@ -86,9 +92,12 @@ const Login = ({ mode }) => {
       toast.success('User Logged in successfully')
       localStorage.setItem(auth_token_key, result.token)
       localStorage.setItem('profile', JSON.stringify(result))
-      router.push('/main')
+      router.push('/')
     } catch ({ data }) {
-      toast.error(data.error)
+      console.log('error', data)
+      if (data?.non_field_errors) {
+        toast.error(data?.non_field_errors.toString())
+      }
     }
   }
 
@@ -126,7 +135,7 @@ const Login = ({ mode }) => {
           >
             <FormControl
               control={control}
-              label='User Name'
+              label='Username'
               name='username'
               placeholder='Enter username'
               {...(errors.username && { error: true, helperText: errors.username.message })}
@@ -140,10 +149,10 @@ const Login = ({ mode }) => {
               {...(errors.password && { error: true, helperText: errors.password.message })}
             />
             <div className='flex justify-between items-center flex-wrap gap-x-3 gap-y-1'>
-              <FormControlLabel control={<Checkbox defaultChecked />} label='Remember me' />
-              <Typography className='text-end' color='primary' component={Link} href='/forgot-password'>
+              <FormControlLabel control={<Checkbox />} label='Remember me' />
+              {/* <Typography className='text-end' color='primary' component={Link} href='/forgot-password'>
                 Forgot password?
-              </Typography>
+              </Typography> */}
             </div>
             <CustomButton isLoading={isLoading} text='Login' />
           </form>

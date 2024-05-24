@@ -101,12 +101,12 @@ const Bets = () => {
       columnHelper.accessor('user', {
         header: 'User',
         cell: ({ row }) => {
-          return <Typography variant='body2'>{row.original?.user?.username || 'N/A'}</Typography>
+          return <Typography>{row.original?.user?.username || 'N/A'}</Typography>
         }
       }),
       columnHelper.accessor('team', {
         header: 'Team',
-        cell: ({ row }) => <Typography variant='body2'>{row?.original?.team || 'N/A'}</Typography>
+        cell: ({ row }) => <Typography>{row?.original?.team || 'N/A'}</Typography>
       }),
       columnHelper.accessor('Other Team', {
         header: 'Other Team',
@@ -270,7 +270,7 @@ const Bets = () => {
                     </tr>
                   ))}
                 </thead>
-                {table.length === 0 ? (
+                {table.getFilteredRowModel().rows.length === 0 ? (
                   <tbody>
                     <tr>
                       <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>

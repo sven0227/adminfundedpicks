@@ -53,7 +53,7 @@ const EditUser = ({ user, setShowEditModal }) => {
     try {
       const result = await updateUser({ id: user.id, data: values }).unwrap()
 
-      toast.success('User Updated Successfull')
+      toast.success('User updated Successfully')
       setShowEditModal(false)
     } catch (error) {
       console.log(error)

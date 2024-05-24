@@ -65,7 +65,7 @@ export const queryFn = async url => {
     console.log(axiosError, 'axios error....')
     const err = axiosError
     // toast.error(err.response.data.message)
-    // unAuthorizationHandler(err)
+    unAuthorizationHandler(err)
     return {
       error: {
         status: err.response?.status,
@@ -78,8 +78,10 @@ export const queryFn = async url => {
 // unauthorization handler
 
 export const unAuthorizationHandler = error => {
-  if (error.response?.status === 401) {
-    // store.dispatch(removeLoginData())
+  console.log(error)
+  if (error.response?.status == 401) {
+    store.dispatch(removeLoginData())
+    window.location.href = '/login'
     removeRtkQueryApisData()
   }
 }
@@ -91,6 +93,11 @@ export const badRequestHandler = error => {
     // store.dispatch(removeLoginData())
     // removeRtkQueryApisData();
   }
+}
+
+export const removeLoginData = () => {
+  localStorage.removeItem(auth_token_key)
+  localStorage.removeItem('profile')
 }
 
 //function removes whole rtk query data

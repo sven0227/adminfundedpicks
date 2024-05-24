@@ -18,7 +18,7 @@ export const challenge_status = 'challenge-status'
 // get authorization token
 
 export const getLoginUserToken = () => {
-  return localStorage.getItem(auth_token_key)
+  return typeof window !== 'undefined' ? window.localStorage.getItem(auth_token_key) : ''
 }
 
 // authorization headers

@@ -24,7 +24,7 @@ const DashboardAnalytics = () => {
           trendNumber='10%'
           title='Total Purchases'
           chipText='Last 4 Month'
-          avatarIcon='ri-shopping-cart-line'
+          avatarIcon='ri-wallet-3-fill'
           avatarSkin='light'
           chipColor='secondary'
         />
@@ -32,11 +32,11 @@ const DashboardAnalytics = () => {
       <Grid item xs={12} sm={6} md={4}>
         <CardStatVertical
           stats='10k'
-          avatarColor='primary'
+          avatarColor='secondary'
           trendNumber='10%'
           title='Total Users'
           chipText='Last 4 Month'
-          avatarIcon='ri-shopping-cart-line'
+          avatarIcon='ri-user-3-fill'
           avatarSkin='light'
           chipColor='secondary'
         />
@@ -44,11 +44,11 @@ const DashboardAnalytics = () => {
       <Grid item xs={12} sm={6} md={4}>
         <CardStatVertical
           stats='5k'
-          avatarColor='primary'
+          avatarColor='success'
           trendNumber='10%'
           title='Total Bets'
           chipText='Last 4 Month'
-          avatarIcon='ri-shopping-cart-line'
+          avatarIcon='ri-cash-line'
           avatarSkin='light'
           chipColor='secondary'
         />

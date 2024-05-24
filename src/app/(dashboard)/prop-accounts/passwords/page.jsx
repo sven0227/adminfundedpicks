@@ -207,6 +207,7 @@ const Users = () => {
         <Grid item xs={12}>
           <Card>
             <CardContent className='flex justify-between flex-col sm:flex-row gap-4 flex-wrap items-start sm:items-center'>
+              <Typography variant='h5'>Update Password</Typography>
               <div className='flex items-center flex-col sm:flex-row is-full sm:is-auto gap-4'>
                 <DebouncedInput
                   value={globalFilter ?? ''}
@@ -245,7 +246,7 @@ const Users = () => {
                     </tr>
                   ))}
                 </thead>
-                {table.length === 0 ? (
+                {table.getFilteredRowModel().rows.length === 0 ? (
                   <tbody>
                     <tr>
                       <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
