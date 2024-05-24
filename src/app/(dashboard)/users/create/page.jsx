@@ -19,15 +19,9 @@ import { useCreateUserMutation } from '@/redux-store/api/user'
 import { useRouter } from 'next/navigation'
 
 const schema = object({
-  username: string([
-    minLength(1, 'This field is required'),
-    minLength(3, 'Username must be at least 3 characters long')
-  ]),
+  username: string([minLength(1, 'This field is required')]),
 
-  password: string([
-    minLength(1, 'This field is required'),
-    minLength(4, 'Password must be at least 8 characters long')
-  ])
+  password: string([minLength(1, 'This field is required')])
 })
 
 const CreateUser = () => {
@@ -48,10 +42,8 @@ const CreateUser = () => {
   })
 
   const onSubmit = async values => {
-    console.log(values, 'values...')
     try {
       const result = await createUser(values).unwrap()
-      console.log(result, 'user result')
       toast.success('User Created Successfully')
       router.push('/users')
     } catch (error) {

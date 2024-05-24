@@ -70,10 +70,7 @@ const accountSchema = object(
   {
     username: string([minLength(1, 'This field is required')]),
     email: string([minLength(1, 'This field is required'), email()]),
-    password: string([
-      minLength(1, 'This field is required'),
-      minLength(8, 'Password must be at least 8 characters long')
-    ]),
+    password: string([minLength(1, 'This field is required')]),
     confirmPassword: string([minLength(1, 'This field is required')])
   },
   [

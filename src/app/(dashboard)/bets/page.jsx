@@ -101,7 +101,7 @@ const Bets = () => {
       columnHelper.accessor('user', {
         header: 'User',
         cell: ({ row }) => {
-          return <Typography variant='body2'>N/A</Typography>
+          return <Typography variant='body2'>{row.original?.user?.username || 'N/A'}</Typography>
         }
       }),
       columnHelper.accessor('team', {

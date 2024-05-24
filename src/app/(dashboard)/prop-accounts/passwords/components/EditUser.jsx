@@ -18,7 +18,7 @@ import { object, minLength, string, optional } from 'valibot'
 
 import FormControl from '@core/components/form-control'
 import CustomButton from '@core/components/button'
-import { useGetUserQuery, useUpdateUserMutation } from '@/redux-store/api/user'
+import { useUpdateUserMutation } from '@/redux-store/api/user'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
 
@@ -31,10 +31,9 @@ const schema = object({
   password: optional(string([minLength(1, 'This field is required')]))
 })
 
-const Update = () => {
+const EditUser = ({ user, setShowEditModal }) => {
   const { id } = useParams()
   const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
-  const { data: userData, isLoading, isError } = useGetUserQuery(id, { skip: id ? false : true })
   const router = useRouter()
   // Hooks
   const {
@@ -45,35 +44,27 @@ const Update = () => {
   } = useForm({
     resolver: valibotResolver(schema),
     defaultValues: {
-      username: userData?.username,
-      password: userData?.password
+      username: '',
+      password: ''
     }
   })
 
   const onSubmit = async values => {
     try {
-      const result = await updateUser({ id, data: values }).unwrap()
+      const result = await updateUser({ id: user.id, data: values }).unwrap()
 
       toast.success('User Updated Successfull')
-      router.push('/users')
+      setShowEditModal(false)
     } catch (error) {
       console.log(error)
     }
   }
 
   useEffect(() => {
-    if (userData) {
-      setValue('username', userData.username)
+    if (user) {
+      setValue('username', user.username)
     }
-  }, [userData])
-
-  if (isLoading) {
-    return <Loader />
-  }
-
-  if (isError) {
-    return <Error />
-  }
+  }, [user])
 
   return (
     <Card>
@@ -86,6 +77,7 @@ const Update = () => {
                 control={control}
                 label='User Name'
                 name='username'
+                disabled
                 placeholder='Enter username'
                 {...(errors.username && { error: true, helperText: errors.username.message })}
               />
@@ -94,16 +86,16 @@ const Update = () => {
               <FormControl
                 inputType='password'
                 control={control}
-                label='Password'
+                label='New Password'
                 name='password'
-                placeholder='Enter Password'
+                placeholder='Enter New Password'
                 {...(errors.password && { error: true, helperText: errors.password.message })}
               />
             </Grid>
             <Grid item xs={12} className='flex justify-end gap-4'>
               <CustomButton
-                disabled={isLoading || isUpdating}
-                isLoading={isLoading || isUpdating}
+                disabled={isUpdating}
+                isLoading={isUpdating}
                 variant='contained'
                 type='submit'
                 text='Update'
@@ -116,4 +108,4 @@ const Update = () => {
   )
 }
 
-export default Update
+export default EditUser

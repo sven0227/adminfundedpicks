@@ -20,19 +20,10 @@ import { valibotResolver } from '@hookform/resolvers/valibot'
 import { email, object, minLength, string } from 'valibot'
 
 const schema = object({
-  firstName: string([
-    minLength(1, 'This field is required'),
-    minLength(3, 'First Name must be at least 3 characters long')
-  ]),
-  lastName: string([
-    minLength(1, 'This field is required'),
-    minLength(3, 'Last Name must be at least 3 characters long')
-  ]),
+  firstName: string([minLength(1, 'This field is required')]),
+  lastName: string([minLength(1, 'This field is required')]),
   email: string([minLength(1, 'This field is required'), email('Please enter a valid email address')]),
-  password: string([
-    minLength(1, 'This field is required'),
-    minLength(8, 'Password must be at least 8 characters long')
-  ])
+  password: string([minLength(1, 'This field is required')])
 })
 
 const FormValidationOnScheme = () => {

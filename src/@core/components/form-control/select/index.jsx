@@ -21,7 +21,6 @@ const SelectForm = props => {
     ...rest
   } = props
 
-  console.log('val', value)
   return (
     <FormControl fullWidth>
       <InputLabel error={Boolean(errors)}>{label}</InputLabel>

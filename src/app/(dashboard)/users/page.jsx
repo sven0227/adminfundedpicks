@@ -145,6 +145,11 @@ const Users = () => {
             >
               <i className='ri-delete-bin-7-line text-textSecondary' />
             </IconButton>
+            <IconButton size='small'>
+              <Link href={`/users/bets/${row.original.id}`} className='flex'>
+                <i className='ri-cash-line' />
+              </Link>
+            </IconButton>
           </div>
         ),
         enableSorting: false
@@ -347,14 +352,16 @@ const Users = () => {
 
 export default Users
 
-const Info = ({ title, subtitle }) => {
+export const Info = ({ title, subtitle, isLast = false }) => {
   return (
     <>
       <Box display='flex' width='100%' justifyContent='space-between'>
-        <Typography className='h4'>{title}</Typography>
+        <Typography className='h4' fontWeight='600'>
+          {title}
+        </Typography>
         <Typography className='h6'>{subtitle}</Typography>
       </Box>
-      <Divider />
+      {!isLast && <Divider />}
     </>
   )
 }

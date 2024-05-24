@@ -37,7 +37,6 @@ const Create = () => {
   })
 
   const onSubmit = async values => {
-    console.log(values, 'values...')
     try {
       await createBet(values).unwrap()
       toast.success('Bet created successfully')

@@ -15,7 +15,7 @@ import Typography from '@mui/material/Typography'
 import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
-import TextField from '@mui/material/TextField'
+
 import Tooltip from '@mui/material/Tooltip'
 import TablePagination from '@mui/material/TablePagination'
 
@@ -36,16 +36,20 @@ import {
 } from '@tanstack/react-table'
 
 // Component Imports
-import OptionMenu from '@core/components/option-menu'
-import CustomAvatar from '@core/components/mui/Avatar'
-
-// Util Imports
-import { getInitials } from '@/utils/getInitials'
-import { getLocalizedUrl } from '@/utils/i18n'
+import { Box, DialogContent, DialogTitle, Divider, Grid, Paper, Stack } from '@mui/material'
+import moment from 'moment/moment'
+import { toast } from 'react-toastify'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-import { Grid } from '@mui/material'
+import { useGetChallengeStatusQuery } from '@/redux-store/api/challenge-status'
+import Loader from '@/components/loader'
+import Error from '@/components/error'
+import WarningModal from '@/components/modal/warning'
+import DebouncedInput from '@/components/debounced-input'
+import CustomModal from '@/components/modal'
+import { useDeleteUserMutation } from '@/redux-store/api/user'
+import { challenge_status } from '@/utils/apiUrls'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -60,178 +64,80 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
-const DebouncedInput = ({ value: initialValue, onChange, debounce = 500, ...props }) => {
-  // States
-  const [value, setValue] = useState(initialValue)
-
-  useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
-  useEffect(() => {
-    const timeout = setTimeout(() => {
-      onChange(value)
-    }, debounce)
-
-    return () => clearTimeout(timeout)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value])
-
-  return <TextField {...props} value={value} onChange={e => setValue(e.target.value)} size='small' />
-}
-
-// Vars
-const invoiceStatusObj = {
-  Sent: { color: 'secondary', icon: 'ri-send-plane-2-line' },
-  Paid: { color: 'success', icon: 'ri-check-line' },
-  Draft: { color: 'primary', icon: 'ri-mail-line' },
-  'Partial Payment': { color: 'warning', icon: 'ri-pie-chart-2-line' },
-  'Past Due': { color: 'error', icon: 'ri-information-line' },
-  Downloaded: { color: 'info', icon: 'ri-arrow-down-line' }
-}
-
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const WidthdrawalTable = () => {
+const WithdrawProfits = () => {
   // States
-  const [status, setStatus] = useState('')
   const [rowSelection, setRowSelection] = useState({})
-
-  const [data, setData] = useState([])
+  const [showDeleteModal, setShowDeleteModal] = useState(false)
+  const { data: challengeStatusData, isLoading, isError } = useGetChallengeStatusQuery()
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  const [selectedUserId, setSelectedUserId] = useState('')
+  const [showDetailModal, setShowDetailModal] = useState(false)
   const [globalFilter, setGlobalFilter] = useState('')
-
-  // Hooks
-  const { lang: locale } = useParams()
+  const [selectedUser, setSelectedUser] = useState(null)
 
   const columns = useMemo(
     () => [
-      {
-        id: 'select',
-        header: ({ table }) => (
-          <Checkbox
-            {...{
-              checked: table.getIsAllRowsSelected(),
-              indeterminate: table.getIsSomeRowsSelected(),
-              onChange: table.getToggleAllRowsSelectedHandler()
-            }}
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            {...{
-              checked: row.getIsSelected(),
-              disabled: !row.getCanSelect(),
-              indeterminate: row.getIsSomeSelected(),
-              onChange: row.getToggleSelectedHandler()
-            }}
-          />
-        )
-      },
-      columnHelper.accessor('id', {
-        header: '#',
-        cell: ({ row }) => (
-          <Typography
-            component={Link}
-            href={getLocalizedUrl(`/apps/invoice/preview/${row.original.id}`, locale)}
-            color='primary'
-          >{`#${row.original.id}`}</Typography>
-        )
-      }),
+      // {
+      //   id: 'select',
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: table.getIsAllRowsSelected(),
+      //         indeterminate: table.getIsSomeRowsSelected(),
+      //         onChange: table.getToggleAllRowsSelectedHandler()
+      //       }}
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       {...{
+      //         checked: row.getIsSelected(),
+      //         disabled: !row.getCanSelect(),
+      //         indeterminate: row.getIsSomeSelected(),
+      //         onChange: row.getToggleSelectedHandler()
+      //       }}
+      //     />
+      //   )
+      // },
       columnHelper.accessor('invoiceStatus', {
+        header: 'Username',
+        cell: ({ row }) => {
+          return <Typography variant='body2'>{row.original.user.username}</Typography>
+        }
+      }),
+      columnHelper.accessor('product', {
+        header: 'Product',
+        cell: ({ row }) => <Typography variant='body2'>{row.original.purchase?.product || 'N/A'}</Typography>
+      }),
+      columnHelper.accessor('startingAmount', {
+        header: 'Starting Amount',
+        cell: ({ row }) => <Typography>{`$${row.original.starting_amount}`}</Typography>
+      }),
+      columnHelper.accessor('target', {
+        header: 'Target',
+        cell: ({ row }) => <Typography>{`$${row.original.target}`}</Typography>
+      }),
+      columnHelper.accessor('status', {
         header: 'Status',
         cell: ({ row }) => (
-          <Tooltip
-            title={
-              <div>
-                <Typography variant='body2' component='span' className='text-inherit'>
-                  {row.original.invoiceStatus}
-                </Typography>
-                <br />
-                <Typography variant='body2' component='span' className='text-inherit'>
-                  Balance:
-                </Typography>{' '}
-                {row.original.balance}
-                <br />
-                <Typography variant='body2' component='span' className='text-inherit'>
-                  Due Date:
-                </Typography>{' '}
-                {row.original.dueDate}
-              </div>
-            }
-          >
-            <CustomAvatar skin='light' color={invoiceStatusObj[row.original.invoiceStatus].color} size={28}>
-              <i className={classnames('text-base', invoiceStatusObj[row.original.invoiceStatus].icon)} />
-            </CustomAvatar>
-          </Tooltip>
+          <Chip variant='tonal' className='capitalize' label={row?.original?.status} color='success' size='small' />
         )
-      }),
-      columnHelper.accessor('name', {
-        header: 'Client',
-        cell: ({ row }) => (
-          <div className='flex items-center gap-3'>
-            {getAvatar({ avatar: row.original.avatar, name: row.original.name })}
-            <div className='flex flex-col'>
-              <Typography className='font-medium' color='text.primary'>
-                {row.original.name}
-              </Typography>
-              <Typography variant='body2'>{row.original.companyEmail}</Typography>
-            </div>
-          </div>
-        )
-      }),
-      columnHelper.accessor('total', {
-        header: 'Total',
-        cell: ({ row }) => <Typography>{`$${row.original.total}`}</Typography>
-      }),
-      columnHelper.accessor('issuedDate', {
-        header: 'Issued Date',
-        cell: ({ row }) => <Typography>{row.original.issuedDate}</Typography>
-      }),
-      columnHelper.accessor('balance', {
-        header: 'Balance',
-        cell: ({ row }) => {
-          return row.original.balance === 0 ? (
-            <Chip variant='tonal' label='Paid' color='success' size='small' />
-          ) : (
-            <Typography color='text.primary'>{row.original.balance}</Typography>
-          )
-        }
       }),
       columnHelper.accessor('action', {
         header: 'Action',
         cell: ({ row }) => (
           <div className='flex items-center gap-0.5'>
-            <IconButton size='small'>
-              <i className='ri-delete-bin-7-line text-textSecondary' />
-            </IconButton>
-            <IconButton size='small'>
-              <Link href={getLocalizedUrl(`/apps/invoice/preview/${row.original.id}`, locale)} className='flex'>
+            <IconButton
+              size='small'
+              onClick={() => localStorage.setItem(challenge_status, JSON.stringify(row.original))}
+            >
+              <Link href={`/withdrawal-profit/${row.original.id}`} className='flex'>
                 <i className='ri-eye-line text-textSecondary' />
               </Link>
             </IconButton>
-            <OptionMenu
-              iconClassName='text-textSecondary'
-              options={[
-                {
-                  text: 'Download',
-                  icon: 'ri-download-line',
-                  menuItemProps: { className: 'flex items-center gap-2' }
-                },
-                {
-                  text: 'Edit',
-                  icon: 'ri-pencil-line',
-                  href: getLocalizedUrl(`/apps/invoice/edit/${row.original.id}`, locale),
-                  linkProps: {
-                    className: 'flex items-center is-full plb-2 pli-5 gap-2'
-                  }
-                },
-                {
-                  text: 'Duplicate',
-                  icon: 'ri-file-copy-line',
-                  menuItemProps: { className: 'flex items-center gap-2' }
-                }
-              ]}
-            />
           </div>
         ),
         enableSorting: false
@@ -242,7 +148,7 @@ const WidthdrawalTable = () => {
   )
 
   const table = useReactTable({
-    data: data,
+    data: challengeStatusData ? challengeStatusData : [],
     columns,
     filterFns: {
       fuzzy: fuzzyFilter
@@ -272,17 +178,16 @@ const WidthdrawalTable = () => {
 
   const getAvatar = params => {
     // Vars
-    const { avatar, name } = params
-
-    if (avatar) {
-      return <CustomAvatar src={avatar} skin='light' size={34} />
-    } else {
-      return (
-        <CustomAvatar skin='light' size={34}>
-          {getInitials(name)}
-        </CustomAvatar>
-      )
-    }
+    // const { avatar, name } = params
+    // if (avatar) {
+    //   return <CustomAvatar src={avatar} skin='light' size={34} />
+    // } else {
+    //   return (
+    //     <CustomAvatar skin='light' size={34}>
+    //       {/* {getInitials(name)} */}
+    //     </CustomAvatar>
+    //   )
+    // }
   }
 
   // useEffect(() => {
@@ -295,91 +200,146 @@ const WidthdrawalTable = () => {
   //   setData(filteredData)
   // }, [status, [], setData])
 
+  if (isLoading) {
+    return <Loader />
+  }
+
+  // if (isError) {
+  //   return <Error />
+  // }
+
+  // delete handler
+
+  const deleteUserHandler = async () => {
+    try {
+      await deleteUser(selectedUserId).unwrap()
+      setShowDeleteModal(false)
+      toast('User deleted')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent className='flex justify-between flex-col sm:flex-row gap-4 flex-wrap items-start sm:items-center'>
-            <div className='flex items-center flex-col sm:flex-row is-full sm:is-auto gap-4'>
-              <DebouncedInput
-                value={globalFilter ?? ''}
-                onChange={value => setGlobalFilter(String(value))}
-                placeholder='Search ...'
-                className='is-full sm:is-auto min-is-[250px]'
-              />
+    <>
+      <WarningModal
+        open={showDeleteModal}
+        setOpen={setShowDeleteModal}
+        isLoading={isDeleting}
+        deleteHandler={deleteUserHandler}
+      />
+      <CustomModal fullWidth maxWidth='sm' open={showDetailModal} setOpen={setShowDetailModal}>
+        <Box>
+          <DialogTitle variant='h5'>User Information</DialogTitle>
+          <DialogContent>
+            <Stack spacing={2}>
+              <Info title='Username' subtitle={selectedUser?.username} />
+              <Info title='Email' subtitle={selectedUser?.email} />
+              <Info title='Funds' subtitle={`$${selectedUser?.funds}`} />
+              <Info title='Account Value' subtitle={`$${selectedUser?.account_value}`} />
+            </Stack>
+          </DialogContent>
+        </Box>
+      </CustomModal>
+
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent className='flex justify-between flex-col sm:flex-row gap-4 flex-wrap items-start sm:items-center'>
+              <Typography variant='h5'>Withdrawal Profits</Typography>
+              <div className='flex items-center flex-col sm:flex-row is-full sm:is-auto gap-4'>
+                <DebouncedInput
+                  value={globalFilter ?? ''}
+                  onChange={value => setGlobalFilter(String(value))}
+                  placeholder='Search ...'
+                  className='is-full sm:is-auto min-is-[250px]'
+                />
+              </div>
+            </CardContent>
+            <div className='overflow-x-auto'>
+              <table className={tableStyles.table}>
+                <thead>
+                  {table.getHeaderGroups().map(headerGroup => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map(header => (
+                        <th key={header.id}>
+                          {header.isPlaceholder ? null : (
+                            <>
+                              <div
+                                className={classnames({
+                                  'flex items-center': header.column.getIsSorted(),
+                                  'cursor-pointer select-none': header.column.getCanSort()
+                                })}
+                                onClick={header.column.getToggleSortingHandler()}
+                              >
+                                {flexRender(header.column.columnDef.header, header.getContext())}
+                                {{
+                                  asc: <i className='ri-arrow-up-s-line text-xl' />,
+                                  desc: <i className='ri-arrow-down-s-line text-xl' />
+                                }[header.column.getIsSorted()] ?? null}
+                              </div>
+                            </>
+                          )}
+                        </th>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                {table.length === 0 ? (
+                  <tbody>
+                    <tr>
+                      <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
+                        No data available
+                      </td>
+                    </tr>
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {table
+                      .getRowModel()
+                      .rows.slice(0, table.getState().pagination.pageSize)
+                      .map(row => {
+                        return (
+                          <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
+                            {row.getVisibleCells().map(cell => (
+                              <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
+                            ))}
+                          </tr>
+                        )
+                      })}
+                  </tbody>
+                )}
+              </table>
             </div>
-          </CardContent>
-          <div className='overflow-x-auto'>
-            <table className={tableStyles.table}>
-              <thead>
-                {table.getHeaderGroups().map(headerGroup => (
-                  <tr key={headerGroup.id}>
-                    {headerGroup.headers.map(header => (
-                      <th key={header.id}>
-                        {header.isPlaceholder ? null : (
-                          <>
-                            <div
-                              className={classnames({
-                                'flex items-center': header.column.getIsSorted(),
-                                'cursor-pointer select-none': header.column.getCanSort()
-                              })}
-                              onClick={header.column.getToggleSortingHandler()}
-                            >
-                              {flexRender(header.column.columnDef.header, header.getContext())}
-                              {{
-                                asc: <i className='ri-arrow-up-s-line text-xl' />,
-                                desc: <i className='ri-arrow-down-s-line text-xl' />
-                              }[header.column.getIsSorted()] ?? null}
-                            </div>
-                          </>
-                        )}
-                      </th>
-                    ))}
-                  </tr>
-                ))}
-              </thead>
-              {[].length === 0 ? (
-                <tbody>
-                  <tr>
-                    <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
-                      No data available
-                    </td>
-                  </tr>
-                </tbody>
-              ) : (
-                <tbody>
-                  {table
-                    .getRowModel()
-                    .rows.slice(0, table.getState().pagination.pageSize)
-                    .map(row => {
-                      return (
-                        <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
-                          {row.getVisibleCells().map(cell => (
-                            <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                          ))}
-                        </tr>
-                      )
-                    })}
-                </tbody>
-              )}
-            </table>
-          </div>
-          <TablePagination
-            rowsPerPageOptions={[10, 25, 50]}
-            component='div'
-            className='border-bs'
-            count={[].length}
-            rowsPerPage={table.getState().pagination.pageSize}
-            page={table.getState().pagination.pageIndex}
-            onPageChange={(_, page) => {
-              table.setPageIndex(page)
-            }}
-            onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
-          />
-        </Card>
+            <TablePagination
+              rowsPerPageOptions={[10, 25, 50]}
+              component='div'
+              className='border-bs'
+              count={challengeStatusData ? challengeStatusData.length : []}
+              rowsPerPage={table.getState().pagination.pageSize}
+              page={table.getState().pagination.pageIndex}
+              onPageChange={(_, page) => {
+                table.setPageIndex(page)
+              }}
+              onRowsPerPageChange={e => console.log(e, 'in ...')}
+            />
+          </Card>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   )
 }
 
-export default WidthdrawalTable
+export default WithdrawProfits
+
+const Info = ({ title, subtitle }) => {
+  return (
+    <>
+      <Box display='flex' width='100%' justifyContent='space-between'>
+        <Typography className='h4'>{title}</Typography>
+        <Typography className='h6'>{subtitle}</Typography>
+      </Box>
+      <Divider />
+    </>
+  )
+}

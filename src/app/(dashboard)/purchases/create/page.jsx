@@ -37,10 +37,8 @@ const Create = () => {
   })
 
   const onSubmit = async values => {
-    console.log(values, 'values...')
     try {
       const result = await createPurchase(values).unwrap()
-      console.log(result, 'user result')
       toast.success('Purchase Created Successfully')
       router.push('/purchases')
     } catch (error) {

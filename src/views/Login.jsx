@@ -83,7 +83,6 @@ const Login = ({ mode }) => {
   const onSubmit = async values => {
     try {
       const result = await login(values).unwrap()
-      console.log(result, 'login result')
       toast.success('User Logged in successfully')
       localStorage.setItem(auth_token_key, result.token)
       localStorage.setItem('profile', JSON.stringify(result))

@@ -10,7 +10,10 @@ export const user_url = '/users/'
 export const purchase_url = '/purchases/'
 export const bet_url = '/bets/'
 
+export const challenge_status_url = '/challenge-status/'
+
 export const auth_token_key = 'token'
+export const challenge_status = 'challenge-status'
 
 // get authorization token
 
@@ -21,7 +24,6 @@ export const getLoginUserToken = () => {
 // authorization headers
 export const authorizationHeaders = headers => {
   const token = getLoginUserToken()
-  console.log(token, 'token..')
   headers.set('Authorization', `Bearer ${token}`)
   return headers
 }

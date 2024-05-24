@@ -84,7 +84,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='/users' icon={<i className='ri-user-3-fill' />}>
           Users
         </MenuItem>
-        <MenuItem href='/bets' icon={<i className='ri-sort-alphabet-asc' />}>
+        <MenuItem href='/bets' icon={<i className='ri-cash-line' />}>
           Bets
         </MenuItem>
         <SubMenu label='Reports' icon={<i className='ri-git-repository-fill' />}>
@@ -94,9 +94,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <SubMenu label='Commerce' icon={<i className='ri-voice-recognition-line' />}>
           <MenuItem href='/commerce/orders'>Orders</MenuItem>
         </SubMenu>
-        <MenuItem href='/products' icon={<i className='ri-football-line' />}>
-          Products
-        </MenuItem>
         <MenuItem href='/coupons' icon={<i className='ri-terminal-window-line' />}>
           Coupons
         </MenuItem>
@@ -111,14 +108,9 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             href='/prop-accounts/events
 '
           >
-            Events
+            Events/Trades
           </MenuItem>
-          <MenuItem
-            href='/prop-accounts/trades
-'
-          >
-            Trades
-          </MenuItem>
+
           <MenuItem
             href='/prop-accounts/calender
 '

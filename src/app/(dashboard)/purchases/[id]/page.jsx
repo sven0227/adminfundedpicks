@@ -52,10 +52,8 @@ const Create = () => {
   }, [purchaseData])
 
   const onSubmit = async values => {
-    console.log(values, 'values...')
     try {
       const result = await updatePurchase({ id, data: values }).unwrap()
-      console.log(result, 'user result')
       toast.success('Purchase Updated Successfully')
       router.push('/purchases')
     } catch (error) {
