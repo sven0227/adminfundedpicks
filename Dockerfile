@@ -3,14 +3,14 @@ FROM node:21 AS build
 
 WORKDIR /app
 
+# Copy all files
+COPY . .
+
 # Copy package.json and package-lock.json first to leverage Docker cache
 COPY package*.json ./
 
 # Install dependencies
 RUN npm install
-
-# Copy all files
-COPY . .
 
 # Generate Prisma client and build icons
 RUN npx prisma generate
