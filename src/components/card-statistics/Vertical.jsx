@@ -32,7 +32,7 @@ const CardStatVertical = props => {
         <CustomAvatar size={avatarSize} variant='rounded' skin={avatarSkin} color={avatarColor}>
           <i className={classnames(avatarIcon, `text-[${avatarIconSize}px]`)} />
         </CustomAvatar>
-        <div className='flex items-center'>
+        {/* <div className='flex items-center'>
           <Typography color={trend === 'negative' ? 'error.main' : 'success.main'}>
             {`${trend === 'negative' ? '-' : '+'}${trendNumber}`}
           </Typography>
@@ -42,14 +42,14 @@ const CardStatVertical = props => {
               trend === 'negative' ? 'ri-arrow-down-s-line text-error' : 'ri-arrow-up-s-line text-success'
             )}
           ></i>
-        </div>
+        </div> */}
       </CardContent>
       <CardContent className='flex flex-col items-start gap-4'>
         <div className='flex flex-col flex-wrap gap-1'>
           <Typography variant='h5'>{stats}</Typography>
           <Typography>{title}</Typography>
         </div>
-        <Chip size='small' variant='tonal' label={chipText} color={chipColor} />
+        {/* <Chip size='small' variant='tonal' label={chipText} color={chipColor} /> */}
       </CardContent>
     </Card>
   )

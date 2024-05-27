@@ -23,8 +23,8 @@ const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexChart
 const series = [
   {
     name: 'Sales',
-    type: 'column',
-    data: [85, 68, 56, 65, 65, 50, 39]
+    type: 'line',
+    data: [63, 38, 31, 45, 46, 27, 18]
   },
   {
     type: 'line',

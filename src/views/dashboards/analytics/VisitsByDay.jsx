@@ -21,13 +21,13 @@ import { rgbaToHex } from '@/utils/rgbaToHex'
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
-const VisitsByDay = ({ serverMode }) => {
+const VisitsByDay = () => {
   // Hooks
   const theme = useTheme()
   const { mode } = useColorScheme()
 
   // Vars
-  const _mode = (mode === 'system' ? serverMode : mode) || serverMode
+  const _mode = 'dark'
 
   const options = {
     chart: {

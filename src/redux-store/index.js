@@ -12,9 +12,11 @@ import { authApi } from './api/auth'
 import { betApi } from './api/bet'
 import auth from './slices/auth'
 import { challengeStatusApi } from './api/challenge-status'
+import { dashboardApi } from './api/dashboard'
 
 export const store = configureStore({
   reducer: {
+    [dashboardApi.reducerPath]: dashboardApi.reducer,
     [authApi.reducerPath]: authApi.reducer,
     [userApi.reducerPath]: userApi.reducer,
     [purchaseApi.reducerPath]: purchaseApi.reducer,
@@ -32,6 +34,7 @@ export const store = configureStore({
       userApi.middleware,
       purchaseApi.middleware,
       betApi.middleware,
-      challengeStatusApi.middleware
+      challengeStatusApi.middleware,
+      dashboardApi.middleware
     ])
 })

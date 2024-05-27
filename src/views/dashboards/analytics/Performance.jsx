@@ -29,13 +29,13 @@ const series = [
   }
 ]
 
-const Performance = ({ serverMode }) => {
+const Performance = () => {
   // Hooks
   const theme = useTheme()
   const { mode } = useColorScheme()
 
   // Vars
-  const _mode = (mode === 'system' ? serverMode : mode) || serverMode
+  const _mode = 'dark'
 
   const options = {
     chart: {

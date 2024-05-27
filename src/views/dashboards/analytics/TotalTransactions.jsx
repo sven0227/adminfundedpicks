@@ -34,13 +34,12 @@ const series = [
   }
 ]
 
-const TotalTransactions = ({ serverMode }) => {
+const TotalTransactions = () => {
   // Hooks
   const theme = useTheme()
   const { mode } = useColorScheme()
 
   // Vars
-  const _mode = (mode === 'system' ? serverMode : mode) || serverMode
 
   const options = {
     chart: {
@@ -58,7 +57,7 @@ const TotalTransactions = ({ serverMode }) => {
       rgbaToHex(`rgb(${theme.palette.success.mainChannel} / 1)`)
     ],
     grid: {
-      borderColor: rgbaToHex(`rgb(${theme.mainColorChannels[_mode]} / 0.12)`),
+      borderColor: rgbaToHex(`rgb(${theme.mainColorChannels['dark']} / 0.12)`),
       xaxis: {
         lines: { show: true }
       },
@@ -94,7 +93,7 @@ const TotalTransactions = ({ serverMode }) => {
       categories: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
       labels: {
         formatter: val => `${Math.abs(Number(val))}`,
-        style: { colors: rgbaToHex(`rgb(${theme.mainColorChannels[_mode]} / 0.4)`), fontSize: '13px' }
+        style: { colors: rgbaToHex(`rgb(${theme.mainColorChannels['dark']} / 0.4)`), fontSize: '13px' }
       }
     },
     yaxis: {
