@@ -1,30 +1,20 @@
 'use client'
 
 // React Imports
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
-import { useParams } from 'next/navigation'
 
 // MUI Imports
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import Checkbox from '@mui/material/Checkbox'
 import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 
-import Tooltip from '@mui/material/Tooltip'
-import TablePagination from '@mui/material/TablePagination'
-
 // Third-party Imports
-import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
-  flexRender,
   getCoreRowModel,
   useReactTable,
   getFilteredRowModel,
@@ -47,6 +37,7 @@ import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import DebouncedInput from '@/components/debounced-input'
 import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
+import Table from '@/components/table'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -71,7 +62,6 @@ const Purchases = () => {
   const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery()
   const [deletePurchase, { isLoading: isDeleting }] = useDeletePurchaseMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
-
   const [globalFilter, setGlobalFilter] = useState('')
 
   const columns = useMemo(
@@ -101,7 +91,7 @@ const Purchases = () => {
       columnHelper.accessor('user', {
         header: 'User',
         cell: ({ row }) => {
-          return <Typography variant='body2'>N/A</Typography>
+          return <Typography variant='body2'>{row?.original?.user?.username || 'N/A'}</Typography>
         }
       }),
       columnHelper.accessor('product', {
@@ -187,16 +177,6 @@ const Purchases = () => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  // useEffect(() => {
-  //   const filteredData = []?.filter(invoice => {
-  //     if (status && invoice.invoiceStatus.toLowerCase().replace(/\s+/g, '-') !== status) return false
-
-  //     return true
-  //   })
-
-  //   setData(filteredData)
-  // }, [status, [], setData])
-
   if (isLoading) {
     return <Loader />
   }
@@ -225,98 +205,7 @@ const Purchases = () => {
         isLoading={isDeleting}
         deleteHandler={deletePurchaseHandler}
       />
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent className='flex justify-between flex-col sm:flex-row gap-4 flex-wrap items-start sm:items-center'>
-              <Button
-                variant='contained'
-                component={Link}
-                startIcon={<i className='ri-add-line' />}
-                href='/purchases/create'
-                className='is-full sm:is-auto'
-              >
-                Create Purchases
-              </Button>
-              <div className='flex items-center flex-col sm:flex-row is-full sm:is-auto gap-4'>
-                <DebouncedInput
-                  value={globalFilter ?? ''}
-                  onChange={value => setGlobalFilter(String(value))}
-                  placeholder='Search ...'
-                  className='is-full sm:is-auto min-is-[250px]'
-                />
-              </div>
-            </CardContent>
-            <div className='overflow-x-auto'>
-              <table className={tableStyles.table}>
-                <thead>
-                  {table.getHeaderGroups().map(headerGroup => (
-                    <tr key={headerGroup.id}>
-                      {headerGroup.headers.map(header => (
-                        <th key={header.id}>
-                          {header.isPlaceholder ? null : (
-                            <>
-                              <div
-                                className={classnames({
-                                  'flex items-center': header.column.getIsSorted(),
-                                  'cursor-pointer select-none': header.column.getCanSort()
-                                })}
-                                onClick={header.column.getToggleSortingHandler()}
-                              >
-                                {flexRender(header.column.columnDef.header, header.getContext())}
-                                {{
-                                  asc: <i className='ri-arrow-up-s-line text-xl' />,
-                                  desc: <i className='ri-arrow-down-s-line text-xl' />
-                                }[header.column.getIsSorted()] ?? null}
-                              </div>
-                            </>
-                          )}
-                        </th>
-                      ))}
-                    </tr>
-                  ))}
-                </thead>
-                {table.getFilteredRowModel().rows.length === 0 ? (
-                  <tbody>
-                    <tr>
-                      <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
-                        No data available
-                      </td>
-                    </tr>
-                  </tbody>
-                ) : (
-                  <tbody>
-                    {table
-                      .getRowModel()
-                      .rows.slice(0, table.getState().pagination.pageSize)
-                      .map(row => {
-                        return (
-                          <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
-                            {row.getVisibleCells().map(cell => (
-                              <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                            ))}
-                          </tr>
-                        )
-                      })}
-                  </tbody>
-                )}
-              </table>
-            </div>
-            <TablePagination
-              rowsPerPageOptions={[10, 25, 50]}
-              component='div'
-              className='border-bs'
-              count={purchasesData ? purchasesData.length : 0}
-              rowsPerPage={table.getState().pagination.pageSize}
-              page={table.getState().pagination.pageIndex}
-              onPageChange={(_, page) => {
-                table.setPageIndex(page)
-              }}
-              onRowsPerPageChange={e => table.setPageSize(Number(e.target.value))}
-            />
-          </Card>
-        </Grid>
-      </Grid>
+      <Table title='Purchases' tableColumns={columns} tableData={purchasesData} />
     </>
   )
 }

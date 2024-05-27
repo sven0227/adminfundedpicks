@@ -1,7 +1,7 @@
 'use client'
 
 // React Imports
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useMemo } from 'react'
 
 // Next Imports
 import Link from 'next/link'
@@ -10,10 +10,8 @@ import Link from 'next/link'
 import Typography from '@mui/material/Typography'
 import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
-import TablePagination from '@mui/material/TablePagination'
 
 // Third-party Imports
-import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import {
   createColumnHelper,
@@ -28,8 +26,8 @@ import {
   getSortedRowModel
 } from '@tanstack/react-table'
 // Style Imports
-import tableStyles from '@core/styles/table.module.css'
 import { challenge_status } from '@/utils/apiUrls'
+import Table from '../table'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -47,10 +45,10 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
 // Column Definitions
 const columnHelper = createColumnHelper()
 
-const WithdrawTable = ({ data, globalFilter, setGlobalFilter }) => {
+const WithdrawTable = ({ data, title }) => {
   // States
   const [rowSelection, setRowSelection] = useState({})
-
+  const [globalFilter, setGlobalFilter] = useState('')
   const columns = useMemo(
     () => [
       columnHelper.accessor('invoiceStatus', {
@@ -127,79 +125,7 @@ const WithdrawTable = ({ data, globalFilter, setGlobalFilter }) => {
     getFacetedMinMaxValues: getFacetedMinMaxValues()
   })
 
-  console.log(table)
-
-  return (
-    <>
-      <div className='overflow-x-auto'>
-        <table className={tableStyles.table}>
-          <thead>
-            {table.getHeaderGroups().map(headerGroup => (
-              <tr key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <th key={header.id}>
-                    {header.isPlaceholder ? null : (
-                      <>
-                        <div
-                          className={classnames({
-                            'flex items-center': header.column.getIsSorted(),
-                            'cursor-pointer select-none': header.column.getCanSort()
-                          })}
-                          onClick={header.column.getToggleSortingHandler()}
-                        >
-                          {flexRender(header.column.columnDef.header, header.getContext())}
-                          {{
-                            asc: <i className='ri-arrow-up-s-line text-xl' />,
-                            desc: <i className='ri-arrow-down-s-line text-xl' />
-                          }[header.column.getIsSorted()] ?? null}
-                        </div>
-                      </>
-                    )}
-                  </th>
-                ))}
-              </tr>
-            ))}
-          </thead>
-          {table.getFilteredRowModel().rows.length === 0 ? (
-            <tbody>
-              <tr>
-                <td colSpan={table.getVisibleFlatColumns().length} className='text-center'>
-                  No data available
-                </td>
-              </tr>
-            </tbody>
-          ) : (
-            <tbody>
-              {table
-                .getRowModel()
-                .rows.slice(0, table.getState().pagination.pageSize)
-                .map(row => {
-                  return (
-                    <tr key={row.id} className={classnames({ selected: row.getIsSelected() })}>
-                      {row.getVisibleCells().map(cell => (
-                        <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
-                      ))}
-                    </tr>
-                  )
-                })}
-            </tbody>
-          )}
-        </table>
-      </div>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 50]}
-        component='div'
-        className='border-bs'
-        count={data ? data.length : []}
-        rowsPerPage={table.getState().pagination.pageSize}
-        page={table.getState().pagination.pageIndex}
-        onPageChange={(_, page) => {
-          table.setPageIndex(page)
-        }}
-        onRowsPerPageChange={e => console.log(e, 'in ...')}
-      />
-    </>
-  )
+  return <Table tableColumns={columns} tableData={data} title={title} />
 }
 
 export default WithdrawTable

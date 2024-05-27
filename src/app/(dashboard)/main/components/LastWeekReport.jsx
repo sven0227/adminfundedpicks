@@ -16,7 +16,6 @@ import { rgbaToHex } from '@/utils/rgbaToHex'
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
 const LastWeekReport = ({ data, categories }) => {
-  console.log(data, categories, 'categories')
   const series = [
     {
       name: 'Transactions',

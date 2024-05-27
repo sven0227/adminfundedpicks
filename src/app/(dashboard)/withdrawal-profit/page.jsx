@@ -2,21 +2,15 @@
 
 // React Imports
 import { useState } from 'react'
-// MUI Imports
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import Typography from '@mui/material/Typography'
+
 // Third-party Imports
-import classnames from 'classnames'
 import { rankItem } from '@tanstack/match-sorter-utils'
 import { createColumnHelper } from '@tanstack/react-table'
 
 // Component Imports
-import { Box, Divider, Grid } from '@mui/material'
 import { useGetChallengeStatusQuery } from '@/redux-store/api/challenge-status'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
-import DebouncedInput from '@/components/debounced-input'
 import WithdrawTable from '@/components/withdrawel-table'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
@@ -32,24 +26,9 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
   return itemRank.passed
 }
 
-// Column Definitions
-const columnHelper = createColumnHelper()
-
 const WithdrawProfits = () => {
   // States
-  const [rowSelection, setRowSelection] = useState({})
   const { data: challengeStatusData, isLoading, isError } = useGetChallengeStatusQuery()
-  const [globalFilter, setGlobalFilter] = useState('')
-
-  // useEffect(() => {
-  //   const filteredData = []?.filter(invoice => {
-  //     if (status && invoice.invoiceStatus.toLowerCase().replace(/\s+/g, '-') !== status) return false
-
-  //     return true
-  //   })
-
-  //   setData(filteredData)
-  // }, [status, [], setData])
 
   if (isLoading) {
     return <Loader />
@@ -60,28 +39,7 @@ const WithdrawProfits = () => {
   }
 
   // delete handler
-  return (
-    <>
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent className='flex justify-between flex-col sm:flex-row gap-4 flex-wrap items-start sm:items-center'>
-              <Typography variant='h5'>Withdrawal Profits</Typography>
-              <div className='flex items-center flex-col sm:flex-row is-full sm:is-auto gap-4'>
-                <DebouncedInput
-                  value={globalFilter ?? ''}
-                  onChange={value => setGlobalFilter(String(value))}
-                  placeholder='Search ...'
-                  className='is-full sm:is-auto min-is-[250px]'
-                />
-              </div>
-            </CardContent>
-            <WithdrawTable data={challengeStatusData} globalFilter={globalFilter} setGlobalFilter={setGlobalFilter} />
-          </Card>
-        </Grid>
-      </Grid>
-    </>
-  )
+  return <WithdrawTable data={challengeStatusData} title='Withdrawal Profits' />
 }
 
 export default WithdrawProfits

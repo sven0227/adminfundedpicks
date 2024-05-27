@@ -285,16 +285,6 @@ const ReportTable = () => {
     }
   }
 
-  // useEffect(() => {
-  //   const filteredData = []?.filter(invoice => {
-  //     if (status && invoice.invoiceStatus.toLowerCase().replace(/\s+/g, '-') !== status) return false
-
-  //     return true
-  //   })
-
-  //   setData(filteredData)
-  // }, [status, [], setData])
-
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

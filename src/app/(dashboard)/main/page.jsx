@@ -18,8 +18,6 @@ const DashboardAnalytics = () => {
   // Vars
   const { data: dashboardData, isloading, isError } = useGetDashboardDataQuery()
 
-  console.log(dashboardData, 'dashboard data...')
-
   if (isError) {
     return <Error />
   }
