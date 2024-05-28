@@ -81,13 +81,13 @@ const Bets = () => {
       //     />
       //   )
       // },
-      columnHelper.accessor('user', {
+      columnHelper.accessor('user.username', {
         header: 'User',
         cell: ({ row }) => {
           return <Typography variant='body2'>{row.original?.user?.username || 'N/A'}</Typography>
         }
       }),
-      columnHelper.accessor('team', {
+      columnHelper.accessor('type', {
         header: 'Type',
         cell: ({ row }) => <Typography variant='body2'>{row?.original?.type || 'N/A'}</Typography>
       }),
@@ -95,7 +95,7 @@ const Bets = () => {
         header: 'Team',
         cell: ({ row }) => <Typography variant='body2'>{row?.original?.team || 'N/A'}</Typography>
       }),
-      columnHelper.accessor('Other Team', {
+      columnHelper.accessor('other_team', {
         header: 'Other Team',
         cell: ({ row }) => <Typography>{row?.original?.other_team || 'N/A'}</Typography>
       }),
@@ -107,7 +107,7 @@ const Bets = () => {
         header: 'Stake',
         cell: ({ row }) => <Typography>${row.original.stake}</Typography>
       }),
-      columnHelper.accessor('Balance After Bet', {
+      columnHelper.accessor('balance_after_bet', {
         header: 'Balance After Bet',
         cell: ({ row }) => <Typography>${row?.original?.balance_after_bet || 'N/A'}</Typography>
       })

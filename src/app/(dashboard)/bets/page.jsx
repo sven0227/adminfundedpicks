@@ -84,7 +84,7 @@ const Bets = () => {
       //     />
       //   )
       // },
-      columnHelper.accessor('user', {
+      columnHelper.accessor('user.username', {
         header: 'User',
         cell: ({ row }) => {
           return <Typography>{row.original?.user?.username || 'N/A'}</Typography>
@@ -94,7 +94,7 @@ const Bets = () => {
         header: 'Team',
         cell: ({ row }) => <Typography>{row?.original?.team || 'N/A'}</Typography>
       }),
-      columnHelper.accessor('Other Team', {
+      columnHelper.accessor('other_team', {
         header: 'Other Team',
         cell: ({ row }) => <Typography>{row?.original?.other_team}</Typography>
       }),

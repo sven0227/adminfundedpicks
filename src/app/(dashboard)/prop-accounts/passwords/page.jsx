@@ -81,21 +81,21 @@ const Users = () => {
       //     />
       //   )
       // },
-      columnHelper.accessor('invoiceStatus', {
+      columnHelper.accessor('user.username', {
         header: 'Username',
         cell: ({ row }) => {
           return <Typography variant='body2'>{row.original.username}</Typography>
         }
       }),
-      columnHelper.accessor('name', {
+      columnHelper.accessor('email', {
         header: 'Email',
         cell: ({ row }) => <Typography variant='body2'>{row.original.email}</Typography>
       }),
-      columnHelper.accessor('total', {
+      columnHelper.accessor('funds', {
         header: 'Funds',
         cell: ({ row }) => <Typography>{`$${row.original.funds}`}</Typography>
       }),
-      columnHelper.accessor('issuedDate', {
+      columnHelper.accessor('date_joined', {
         header: 'Date Joined',
         cell: ({ row }) => <Typography>{moment(row.original.date_joined).format('DD-MM-YYYY ')}</Typography>
       }),

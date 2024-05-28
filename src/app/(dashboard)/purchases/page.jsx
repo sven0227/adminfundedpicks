@@ -13,20 +13,9 @@ import IconButton from '@mui/material/IconButton'
 
 // Third-party Imports
 import { rankItem } from '@tanstack/match-sorter-utils'
-import {
-  createColumnHelper,
-  getCoreRowModel,
-  useReactTable,
-  getFilteredRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFacetedMinMaxValues,
-  getPaginationRowModel,
-  getSortedRowModel
-} from '@tanstack/react-table'
+import { createColumnHelper } from '@tanstack/react-table'
 
 // Component Imports
-import { Grid } from '@mui/material'
 import moment from 'moment/moment'
 import { toast } from 'react-toastify'
 
@@ -35,7 +24,6 @@ import tableStyles from '@core/styles/table.module.css'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
-import DebouncedInput from '@/components/debounced-input'
 import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
 import Table from '@/components/table'
 
@@ -57,12 +45,10 @@ const columnHelper = createColumnHelper()
 
 const Purchases = () => {
   // States
-  const [rowSelection, setRowSelection] = useState({})
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery()
   const [deletePurchase, { isLoading: isDeleting }] = useDeletePurchaseMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
-  const [globalFilter, setGlobalFilter] = useState('')
 
   const columns = useMemo(
     () => [
@@ -88,11 +74,9 @@ const Purchases = () => {
       //     />
       //   )
       // },
-      columnHelper.accessor('user', {
+      columnHelper.accessor('user.username', {
         header: 'User',
-        cell: ({ row }) => {
-          return <Typography variant='body2'>{row?.original?.user?.username || 'N/A'}</Typography>
-        }
+        cell: ({ renderValue }) => <Typography variant='body2'>{renderValue()}</Typography>
       }),
       columnHelper.accessor('product', {
         header: 'Product',
@@ -147,35 +131,6 @@ const Purchases = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
-
-  const table = useReactTable({
-    data: purchasesData ? purchasesData : [],
-    columns,
-    filterFns: {
-      fuzzy: fuzzyFilter
-    },
-    state: {
-      rowSelection,
-      globalFilter
-    },
-    initialState: {
-      pagination: {
-        pageSize: 10
-      }
-    },
-    enableRowSelection: true, //enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-    globalFilterFn: fuzzyFilter,
-    onRowSelectionChange: setRowSelection,
-    getCoreRowModel: getCoreRowModel(),
-    onGlobalFilterChange: setGlobalFilter,
-    getFilteredRowModel: getFilteredRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-    getFacetedMinMaxValues: getFacetedMinMaxValues()
-  })
 
   if (isLoading) {
     return <Loader />

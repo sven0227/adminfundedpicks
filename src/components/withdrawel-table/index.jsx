@@ -51,17 +51,17 @@ const WithdrawTable = ({ data, title }) => {
   const [globalFilter, setGlobalFilter] = useState('')
   const columns = useMemo(
     () => [
-      columnHelper.accessor('invoiceStatus', {
+      columnHelper.accessor('user.username', {
         header: 'Username',
         cell: ({ row }) => {
           return <Typography variant='body2'>{row.original.user.username}</Typography>
         }
       }),
-      columnHelper.accessor('product', {
+      columnHelper.accessor('purchase.product', {
         header: 'Product',
         cell: ({ row }) => <Typography variant='body2'>{row.original.purchase?.product || 'N/A'}</Typography>
       }),
-      columnHelper.accessor('startingAmount', {
+      columnHelper.accessor('starting_amount', {
         header: 'Starting Amount',
         cell: ({ row }) => <Typography>{`$${row.original.starting_amount}`}</Typography>
       }),
