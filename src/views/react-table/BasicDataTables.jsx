@@ -49,7 +49,7 @@ const columns = [
 const BasicDataTables = () => {
   // States
 
-  const [data, setData] = useState(() => [...defaultData])
+  const [data] = useState(() => [...defaultData])
 
   // Hooks
   const table = useReactTable({

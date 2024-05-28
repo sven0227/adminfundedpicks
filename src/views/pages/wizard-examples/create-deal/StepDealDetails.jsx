@@ -48,7 +48,7 @@ const StepDealDetails = ({ activeStep, handleNext, handlePrev, steps }) => {
     setOfferedItems(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value)
   }
 
-  const handleDateChange = (dates, event) => {
+  const handleDateChange = dates => {
     const [start, end] = dates
 
     setStartDate(start)

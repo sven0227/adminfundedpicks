@@ -44,7 +44,7 @@ const defaultColumns = [
 const ColumnVisibility = () => {
   // States
 
-  const [data, setData] = useState(() => defaultData)
+  const [data] = useState(() => defaultData)
   const [columns] = useState(() => [...defaultColumns])
   const [columnVisibility, setColumnVisibility] = useState({})
 

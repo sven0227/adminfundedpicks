@@ -113,7 +113,7 @@ const KitchenSink = () => {
   const [columnFilters, setColumnFilters] = useState([])
   const [globalFilter, setGlobalFilter] = useState('')
 
-  const [data, setData] = useState(() => defaultData)
+  const [data] = useState(() => defaultData)
 
   // Hooks
   const columns = useMemo(

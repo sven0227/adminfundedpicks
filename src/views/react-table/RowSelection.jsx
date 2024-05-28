@@ -24,7 +24,7 @@ const RowSelection = () => {
   // States
   const [rowSelection, setRowSelection] = useState({})
 
-  const [data, setData] = useState(() => defaultData)
+  const [data] = useState(() => defaultData)
 
   // Hooks
   const columns = useMemo(

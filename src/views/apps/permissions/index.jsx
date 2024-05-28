@@ -86,7 +86,7 @@ const Permissions = ({ permissionsData }) => {
   const [rowSelection, setRowSelection] = useState({})
   const [editValue, setEditValue] = useState('')
 
-  const [data, setData] = useState(...[permissionsData])
+  const [data] = useState(...[permissionsData])
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Vars

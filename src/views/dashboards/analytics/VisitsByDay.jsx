@@ -8,7 +8,7 @@ import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
-import { useColorScheme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -24,7 +24,6 @@ const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexChart
 const VisitsByDay = () => {
   // Hooks
   const theme = useTheme()
-  const { mode } = useColorScheme()
 
   // Vars
   const _mode = 'dark'

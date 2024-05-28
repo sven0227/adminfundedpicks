@@ -131,8 +131,8 @@ const WidthdrawDetails = () => {
             { title: 'Profit', value: `$${profit}` },
             { title: 'Daily Loss', value: `$${max_daily_loss}` },
             { title: 'Loss', value: `$${maximum_loss}` }
-          ].map(({ title, value }) => (
-            <Grid item sm={12} md={4}>
+          ].map(({ title, value }, i) => (
+            <Grid key={i} item sm={12} md={4}>
               <Stats title={title} value={value} />
             </Grid>
           ))}

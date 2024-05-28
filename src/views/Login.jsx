@@ -1,8 +1,7 @@
 'use client'
 
 // Next Imports
-import Link from 'next/link'
-import { useParams, useRouter, useSearchParams } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 // MUI Imports
 import Typography from '@mui/material/Typography'
@@ -12,7 +11,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 // Third-party Imports
 import { useForm } from 'react-hook-form'
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { object, minLength, string, email } from 'valibot'
+import { object, minLength, string } from 'valibot'
 import classnames from 'classnames'
 
 // Component Imports
@@ -28,7 +27,6 @@ import CustomButton from '@/@core/components/button'
 import FormControl from '@core/components/form-control'
 import { toast } from 'react-toastify'
 import { auth_token_key } from '@/utils/apiUrls'
-import isAuth from '@/components/isAuth'
 import { useEffect } from 'react'
 
 const schema = object({

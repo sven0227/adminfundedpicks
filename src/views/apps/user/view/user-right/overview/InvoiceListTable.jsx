@@ -74,7 +74,7 @@ const InvoiceListTable = ({ invoiceData }) => {
   // States
   const [rowSelection, setRowSelection] = useState({})
 
-  const [data, setData] = useState(...[invoiceData])
+  const [data] = useState(...[invoiceData])
   const [globalFilter, setGlobalFilter] = useState('')
   const [anchorEl, setAnchorEl] = useState(null)
 

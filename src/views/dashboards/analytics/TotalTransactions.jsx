@@ -11,7 +11,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
-import { useColorScheme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
@@ -37,7 +37,6 @@ const series = [
 const TotalTransactions = () => {
   // Hooks
   const theme = useTheme()
-  const { mode } = useColorScheme()
 
   // Vars
 

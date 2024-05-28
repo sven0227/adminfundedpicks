@@ -145,7 +145,7 @@ const ProjectListTable = () => {
   // States
   const [rowSelection, setRowSelection] = useState({})
 
-  const [data, setData] = useState(...[projectTable])
+  const [data] = useState(...[projectTable])
   const [globalFilter, setGlobalFilter] = useState('')
 
   // Hooks

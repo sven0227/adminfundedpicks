@@ -4,14 +4,9 @@
 import { useState } from 'react'
 
 // MUI Import
-import Tab from '@mui/material/Tab'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import Chip from '@mui/material/Chip'
-import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
-import Avatar from '@mui/material/Avatar'
-import TabContext from '@mui/lab/TabContext'
 
 // Third-party Imports
 import classnames from 'classnames'
@@ -21,29 +16,6 @@ import OptionMenu from '@core/components/option-menu'
 
 // Style Imports
 import tableStyles from '@core/styles/table.module.css'
-
-const tabAvatars = [
-  {
-    imgWidth: 32.8,
-    imgHeight: 34,
-    category: 'google'
-  },
-  {
-    imgWidth: 34,
-    imgHeight: 34,
-    category: 'facebook'
-  },
-  {
-    imgWidth: 34,
-    imgHeight: 34,
-    category: 'instagram'
-  },
-  {
-    imgWidth: 34,
-    imgHeight: 34,
-    category: 'reddit'
-  }
-]
 
 const tabContentData = {
   google: [
@@ -227,23 +199,6 @@ const TopReferralSources = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue)
   }
-
-  const RenderTabAvatar = ({ data }) => (
-    <Avatar
-      variant='rounded'
-      className={classnames(
-        value === data.category ? 'border-solid border-primary' : 'border-dashed',
-        'is-[92px] bs-[86px] border-2 bg-transparent rounded-xl'
-      )}
-    >
-      <img
-        src={`/images/cards/social-${data.category}.png`}
-        alt={`${data.category}`}
-        width={data.imgWidth}
-        height={data.imgHeight}
-      />
-    </Avatar>
-  )
 
   return (
     <Card>

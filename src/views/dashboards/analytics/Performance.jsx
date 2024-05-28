@@ -7,7 +7,7 @@ import dynamic from 'next/dynamic'
 import Card from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-import { useColorScheme, useTheme } from '@mui/material/styles'
+import { useTheme } from '@mui/material/styles'
 
 // Components Imports
 import OptionMenu from '@core/components/option-menu'
@@ -32,7 +32,6 @@ const series = [
 const Performance = () => {
   // Hooks
   const theme = useTheme()
-  const { mode } = useColorScheme()
 
   // Vars
   const _mode = 'dark'
