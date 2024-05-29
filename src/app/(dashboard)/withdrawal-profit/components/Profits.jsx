@@ -18,7 +18,7 @@ const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexChart
 // Vars
 
 const Profits = ({ profit }) => {
-  const series = [profit]
+  const series = [(+profit).toFixed(1)]
   // Hooks
   const theme = useTheme()
 

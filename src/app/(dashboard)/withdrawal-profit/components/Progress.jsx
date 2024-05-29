@@ -18,7 +18,7 @@ const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexChart
 // Vars
 
 const Progress = ({ progress }) => {
-  const series = [progress]
+  const series = [(+progress).toFixed(1)]
   // Hooks
   const theme = useTheme()
 

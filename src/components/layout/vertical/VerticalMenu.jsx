@@ -97,9 +97,6 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='/coupons' icon={<i className='ri-terminal-window-line' />}>
           Coupons
         </MenuItem>
-        <MenuItem href='/customers' icon={<i className='ri-chat-thread-line' />}>
-          Customers
-        </MenuItem>
         <MenuItem href='/affiliates' icon={<i className='ri-chat-poll-line' />}>
           Affiliates
         </MenuItem>
