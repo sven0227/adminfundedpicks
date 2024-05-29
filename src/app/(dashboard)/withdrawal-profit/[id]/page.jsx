@@ -8,6 +8,10 @@ import { Info } from '../../users/page'
 import Loader from '@/components/loader'
 import moment from 'moment'
 import WeeklyOverview from '../components/TotalSpending'
+import Loss from '../components/Loss'
+import Profits from '../components/Profits'
+import Progress from '../components/Progress'
+import Account from '../components/Account'
 
 const WidthdrawDetails = () => {
   const [isChecking, setIsChecking] = useState(true)
@@ -100,51 +104,54 @@ const WidthdrawDetails = () => {
   } = purchase || {}
 
   return (
-    <Grid container spacing={4}>
-      <Grid item sm={12} md={4}>
-        <Typography variant='h5'>User Information</Typography>
-        <Card className='mt-3'>
-          <CardContent>
-            <Stack spacing={2}>
-              <Info title='Username' subtitle={username} />
-              <Info title='Email' subtitle={email} />
-              <Info title='Funds' subtitle={`$${funds}`} />
-              <Info title='Account Value' subtitle={`$${account_value}`} />
-              <Info title='Alv' subtitle={alv} />
-              <Info title='Date Joined' subtitle={moment(date_joined).format('DD-MM-YYYY')} />
-              <Info title='Staff' subtitle={is_staff ? 'Yes' : 'No'} />
-              <Info title='Active' subtitle={is_active ? 'Yes' : 'No'} isLast />
-            </Stack>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item sm={12} md={8}>
-        <Typography variant='h5'>Stats</Typography>
-        <Grid container spacing={2} className='mt-1'>
-          {[
-            { title: 'Account Balance', value: `$${account_balance}` },
-            { title: 'Progress', value: `${progress_percentage}%` },
-            { title: 'ALV', value: `${ALV}` },
-            { title: 'Number of Bets', value: `${num_bets}` },
-            { title: 'Profit Percentage', value: `${profit_percent}%` },
-            { title: 'Bet Status', value: `${min_bets_status}` },
-            { title: 'Profit', value: `$${profit}` },
-            { title: 'Daily Loss', value: `$${max_daily_loss}` },
-            { title: 'Loss', value: `$${maximum_loss}` }
-          ].map(({ title, value }, i) => (
-            <Grid key={i} item sm={12} md={4}>
-              <Stats title={title} value={value} />
+    <>
+      <Grid container spacing={2}>
+        <Grid item sm={12} md={4}>
+          <Typography variant='h5'>User Information</Typography>
+          <Card className='mt-3'>
+            <CardContent>
+              <Stack spacing={2}>
+                <Info title='Name' subtitle={first_name ? first_name + ' ' + last_name : 'N/A'} />
+                <Info title='Username' subtitle={username} />
+                <Info title='Email' subtitle={email} />
+                <Info title='Target' subtitle={`$${target}`} />
+                <Info title='Starting Amount' subtitle={`$${starting_amount}`} />
+                <Info title='Date Joined' subtitle={moment(date_joined).format('DD-MM-YYYY')} />
+                <Info title='Staff' subtitle={is_staff ? 'Yes' : 'No'} />
+                <Info title='Active' subtitle={is_active ? 'Yes' : 'No'} isLast />
+              </Stack>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item sm={12} md={8}>
+          <Typography variant='h5'>Stats</Typography>
+          <Grid container spacing={2} className='mt-1'>
+            <Grid item sm={6}>
+              <Account accountBalance={account_balance} profit={profit} alv={alv} funds={funds} />
             </Grid>
-          ))}
+            <Grid item sm={6}>
+              <Grid container spacing={2}>
+                <Grid item sm={6}>
+                  <Profits profit={profit_percent} />
+                </Grid>
+                <Grid item sm={6}>
+                  <Progress progress={progress_percentage} />
+                </Grid>
+                <Grid item sm={12}>
+                  <Loss loss={maximum_loss} dailyLoss={max_daily_loss} />
+                </Grid>
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <WeeklyOverview
+            categories={Object.keys(daily_nets).map(date => moment(date).format('DD-MM-YY'))}
+            sales={Object.values(daily_nets)}
+          />
         </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <WeeklyOverview
-          categories={Object.keys(daily_nets).map(date => moment(date).format('DD-MM-YY'))}
-          sales={Object.values(daily_nets)}
-        />
-      </Grid>
-    </Grid>
+    </>
   )
 }
 

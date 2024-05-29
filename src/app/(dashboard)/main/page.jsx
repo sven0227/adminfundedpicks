@@ -30,14 +30,14 @@ const DashboardAnalytics = () => {
   return (
     <Grid container spacing={6}>
       {[
-        { title: 'Total Users', count: users_total, icon: 'ri-user-3-fill' },
-        { title: 'Total Bets', count: bet_total, icon: 'ri-cash-line' },
-        { title: 'Total Purchases', count: purchase_total, icon: 'ri-wallet-3-fill' }
-      ].map(({ title, count, icon }, i) => (
+        { title: 'Total Users', count: users_total, icon: 'ri-user-3-fill', color: 'primary' },
+        { title: 'Total Bets', count: bet_total, icon: 'ri-cash-line', color: 'warning' },
+        { title: 'Total Purchases', count: purchase_total, icon: 'ri-wallet-3-fill', color: 'info' }
+      ].map(({ title, count, icon, color }, i) => (
         <Grid key={i} item xs={12} sm={6} md={4}>
           <CardStatVertical
             stats={count}
-            avatarColor='primary'
+            avatarColor={color}
             trendNumber='22%'
             title={title}
             chipText='Last 4 Month'
