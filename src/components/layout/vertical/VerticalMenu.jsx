@@ -71,7 +71,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='/purchases' icon={<i className='ri-wallet-3-fill' />}>
           Purchases
         </MenuItem>
-        <SubMenu label='Demo accounts' icon={<i className='ri-account-pin-circle-fill' />}>
+        <SubMenu label='Demo Accounts' icon={<i className='ri-account-pin-circle-fill' />}>
           <MenuItem href='/accounts/inprogress'>In Progress</MenuItem>
           <MenuItem href='/accounts/passed'>Passed</MenuItem>
           <MenuItem href='/accounts/failed'>Failed</MenuItem>
@@ -81,26 +81,8 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         <MenuItem href='/withdrawal-profit' icon={<i className='ri-archive-drawer-fill' />}>
           Withdrawals Profit
         </MenuItem>
-        <MenuItem href='/users' icon={<i className='ri-user-3-fill' />}>
-          Users
-        </MenuItem>
-        <MenuItem href='/bets' icon={<i className='ri-cash-line' />}>
-          Bets
-        </MenuItem>
-        <SubMenu label='Reports' icon={<i className='ri-git-repository-fill' />}>
-          <MenuItem href='/report/spenders'>Top spenders</MenuItem>
-          <MenuItem href='/report/users'>Global user report</MenuItem>
-        </SubMenu>
-        <SubMenu label='Commerce' icon={<i className='ri-voice-recognition-line' />}>
-          <MenuItem href='/commerce/orders'>Orders</MenuItem>
-        </SubMenu>
-        <MenuItem href='/coupons' icon={<i className='ri-terminal-window-line' />}>
-          Coupons
-        </MenuItem>
-        <MenuItem href='/affiliates' icon={<i className='ri-chat-poll-line' />}>
-          Affiliates
-        </MenuItem>
-        <SubMenu label='Prop accounts' icon={<i className='ri-product-hunt-fill' />}>
+        <SubMenu label='Users' icon={<i className='ri-user-3-fill' />}>
+          <MenuItem href='/users'>Users</MenuItem>
           <MenuItem
             href='/prop-accounts/events
 '
@@ -139,6 +121,24 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
             Password
           </MenuItem>
         </SubMenu>
+
+        <MenuItem href='/bets' icon={<i className='ri-cash-line' />}>
+          Bets
+        </MenuItem>
+        <SubMenu label='Reports' icon={<i className='ri-git-repository-fill' />}>
+          <MenuItem href='/report/spenders'>Top spenders</MenuItem>
+          <MenuItem href='/report/users'>Global user report</MenuItem>
+        </SubMenu>
+        <MenuItem href='/commerce' icon={<i className='ri-voice-recognition-line' />}>
+          Commerce
+        </MenuItem>
+
+        <MenuItem href='/coupons' icon={<i className='ri-terminal-window-line' />}>
+          Coupons
+        </MenuItem>
+        <MenuItem href='/affiliates' icon={<i className='ri-chat-poll-line' />}>
+          Affiliates
+        </MenuItem>
 
         <SubMenu label='Payouts' icon={<i className='ri-money-dollar-circle-fill' />}>
           <MenuItem

@@ -2,7 +2,7 @@ import axios from 'axios'
 import { toast } from 'react-toastify'
 import { auth_token_key, base_url, getAuthToken } from './apiUrls'
 // import { userApi } from '@/redux-store/api/user'
-// import { store } from '@/redux-store'
+import { store } from '@/redux-store'
 
 export const apiResponseError = error => (error.data.message ? error.data.message : 'Something went wrong')
 
