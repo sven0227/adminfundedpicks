@@ -18,3 +18,15 @@ export const formatDateToMonthShort = (value, toTimeForCurrentDay = true) => {
 
   return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
 }
+
+
+export const formatDateShort = (value, toTimeForCurrentDay = true) => {
+  const date = new Date(value)
+  let formatting = { month: 'short', day: 'numeric', year: 'numeric' }
+
+  if (toTimeForCurrentDay && isToday(date)) {
+    formatting = { hour: 'numeric', minute: 'numeric' }
+  }
+
+  return new Intl.DateTimeFormat('en-US', formatting).format(new Date(value))
+}

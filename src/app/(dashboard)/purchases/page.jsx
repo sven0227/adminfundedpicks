@@ -26,6 +26,7 @@ import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
 import Table from '@/components/table'
+import { currencyFormatter } from '../utils'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -84,7 +85,7 @@ const Purchases = () => {
       }),
       columnHelper.accessor('amount', {
         header: 'Amount',
-        cell: ({ row }) => <Typography>{`$${row?.original?.amount || 0}`}</Typography>
+        cell: ({ row }) => <Typography>{`${currencyFormatter.format(row?.original?.amount) || 0}`}</Typography>
       }),
       columnHelper.accessor('payment_method', {
         header: 'Payment Method',

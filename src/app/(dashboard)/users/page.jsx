@@ -36,6 +36,7 @@ import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import CustomModal from '@/components/modal'
 import Table from '@/components/table'
+import { currencyFormatter } from '../utils'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -100,7 +101,7 @@ const Users = () => {
       }),
       columnHelper.accessor('funds', {
         header: 'Funds',
-        cell: ({ row }) => <Typography>{`$${row.original.funds}`}</Typography>
+        cell: ({ row }) => <Typography>{`${currencyFormatter.format(row.original.funds)}`}</Typography>
       }),
       columnHelper.accessor('date_joined', {
         header: 'Date Joined',

@@ -33,6 +33,8 @@ import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import { useDeleteBetMutation, useGetAllBetsQuery } from '@/redux-store/api/bet'
 import Table from '@/components/table'
+import { currencyFormatter } from '../utils'
+import { formatDateShort, formatDateToMonthShort } from '@/views/apps/chat/utils'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -84,6 +86,12 @@ const Bets = () => {
       //     />
       //   )
       // },
+      columnHelper.accessor('created_at', {
+        header: 'Created At',
+        cell: ({ row }) => {
+          return <Typography>{formatDateShort(row.original?.created_at)}</Typography>
+        }
+      }),
       columnHelper.accessor('user.username', {
         header: 'User',
         cell: ({ row }) => {
@@ -100,11 +108,15 @@ const Bets = () => {
       }),
       columnHelper.accessor('price', {
         header: 'Price',
-        cell: ({ row }) => <Typography>${row?.original?.price || 'N/A'}</Typography>
+        cell: ({ row }) => <Typography>{currencyFormatter.format(row?.original?.price) || 'N/A'}</Typography>
       }),
       columnHelper.accessor('stake', {
         header: 'Stake',
-        cell: ({ row }) => <Typography>${row.original.stake}</Typography>
+        cell: ({ row }) => <Typography>{currencyFormatter.format(row.original.stake)}</Typography>
+      }),
+      columnHelper.accessor('status', {
+        header: 'Status',
+        cell: ({ row }) => <Typography>{(row.original.result)}</Typography>
       }),
       columnHelper.accessor('action', {
         header: 'Action',

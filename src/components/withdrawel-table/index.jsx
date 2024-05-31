@@ -28,6 +28,7 @@ import {
 // Style Imports
 import { challenge_status } from '@/utils/apiUrls'
 import Table from '../table'
+import { currencyFormatter } from '@/app/(dashboard)/utils'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -63,11 +64,11 @@ const WithdrawTable = ({ data, title }) => {
       }),
       columnHelper.accessor('starting_amount', {
         header: 'Starting Amount',
-        cell: ({ row }) => <Typography>{`$${row.original.starting_amount}`}</Typography>
+        cell: ({ row }) => <Typography>{`${currencyFormatter.format(row.original.starting_amount)}`}</Typography>
       }),
       columnHelper.accessor('target', {
         header: 'Target',
-        cell: ({ row }) => <Typography>{`$${row.original.target}`}</Typography>
+        cell: ({ row }) => <Typography>{`${currencyFormatter.format(row.original.target)}`}</Typography>
       }),
       columnHelper.accessor('status', {
         header: 'Status',
