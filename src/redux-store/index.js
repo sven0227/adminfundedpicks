@@ -32,11 +32,12 @@ export const store = configureStore({
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({ serializableCheck: false }).concat([
+      dashboardApi.middleware,
       authApi.middleware,
       userApi.middleware,
       purchaseApi.middleware,
       betApi.middleware,
-      challengeApi.middleware,
-      dashboardApi.middleware
+      challengeStatusApi.middleware,
+      challengeApi.middleware
     ])
 })
