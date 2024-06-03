@@ -15,7 +15,7 @@ export const challenge_status_url = '/challenge-status/'
 export const auth_token_key = 'token'
 export const challenge_status = 'challenge-status'
 export const dashboard_url = '/dashboard-data'
-export const challenge_url = '/challenges/'
+export const challenge_url = '/commerce/'
 
 // get authorization token
 

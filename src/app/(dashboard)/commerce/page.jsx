@@ -58,40 +58,18 @@ const Challenges = () => {
     //     />
     //   )
     // },
-    columnHelper.accessor('user.username', {
-      header: 'User',
-      cell: ({ renderValue }) => <Typography variant='body2'>{renderValue()}</Typography>
+    columnHelper.accessor('package_name', {
+      header: 'Package Name',
+      cell: ({ row }) => <Typography>{`${row?.original?.package_name || "N/A"}`}</Typography>
     }),
-    columnHelper.accessor('purchase.amount', {
-      header: 'Purchase',
-      cell: ({ row }) => <Typography variant='body2'>{row?.original?.purchase?.amount || 'N/A'}</Typography>
-    }),
-    columnHelper.accessor('target', {
-      header: 'Target',
-      cell: ({ row }) => <Typography>{`$${row?.original?.target || 0}`}</Typography>
-    }),
-    columnHelper.accessor('starting_amount', {
-      header: 'Starting Amount',
-      cell: ({ row }) => <Typography>${row?.original?.starting_amount || 'N/A'}</Typography>
+    columnHelper.accessor('package_price', {
+      header: 'Package Price',
+      cell: ({ row }) => <Typography>${row?.original?.package_price}k</Typography>
     }),
 
-    columnHelper.accessor('daily_loss_limit', {
-      header: 'Daily Loss Limit',
-      cell: ({ row }) => <Typography>${row?.original?.daily_loss_limit}</Typography>
-    }),
-
-    columnHelper.accessor('maximum_loss_limit', {
-      header: 'Minimum Loss Limit',
-      cell: ({ row }) => <Typography>${row?.original?.maximum_loss_limit}</Typography>
-    }),
-
-    columnHelper.accessor('minimum_bet_size', {
-      header: 'Minimum bet size',
-      cell: ({ row }) => <Typography>${row?.original?.minimum_bet_size}</Typography>
-    }),
-    columnHelper.accessor('maximum_bet_size', {
-      header: 'Maximum Bet Size',
-      cell: ({ row }) => <Typography>${row?.original?.maximum_bet_size}</Typography>
+    columnHelper.accessor('price', {
+      header: 'Price',
+      cell: ({ row }) => <Typography>${row?.original?.price}</Typography>
     }),
     columnHelper.accessor('action', {
       header: 'Action',
