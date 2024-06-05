@@ -13,7 +13,20 @@ export const purchaseApi = createApi({
   tagTypes: ['purchases', 'purchase'],
   endpoints: builder => ({
     getAllPurchases: builder.query({
+<<<<<<< Updated upstream
       queryFn: () => queryFn(purchase_url),
+=======
+      query: ({ startDate, endDate }) => {
+        const params = [];
+        if (startDate) params.push(`created_at_after=${startDate}`);
+        if (endDate) params.push(`created_at_before=${endDate}`);
+        const queryString = params.length ? `?${params.join('&')}` : '';
+        return {
+          url: `${purchase_url}${queryString}`,
+          method: 'GET'
+        };
+      },
+>>>>>>> Stashed changes
       providesTags: ['purchases']
     }),
     createPurchase: builder.mutation({

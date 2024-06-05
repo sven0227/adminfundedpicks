@@ -50,6 +50,20 @@ const Purchases = () => {
   const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery()
   const [deletePurchase, { isLoading: isDeleting }] = useDeletePurchaseMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
+<<<<<<< Updated upstream
+=======
+  const [startDate, setStartDate] = useState(today)
+  const [endDate, setEndDate] = useState(fifteenDaysFromToday)
+
+  const getQueryParams = (startDate, endDate) => {
+    if (startDate && endDate) {
+      return { startDate: convertDateFormat(startDate), endDate: convertDateFormat(endDate) };
+    }
+    return {};
+  };
+
+  const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery(getQueryParams(startDate, endDate))
+>>>>>>> Stashed changes
 
   const columns = useMemo(
     () => [

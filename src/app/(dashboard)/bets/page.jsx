@@ -66,7 +66,15 @@ const Bets = () => {
   const [startDate, setStartDate] = useState(today)
   const [endDate, setEndDate] = useState(fifteenDaysFromToday)
   const [globalFilter, setGlobalFilter] = useState('')
-  const { data: betsData, isLoading, isError } = useGetAllBetsQuery({ startDate: convertDateFormat(startDate), endDate: convertDateFormat(endDate ?? fifteenDaysFromToday) })
+
+  const getQueryParams = (startDate, endDate) => {
+    if (startDate && endDate) {
+      return { startDate: convertDateFormat(startDate), endDate: convertDateFormat(endDate) };
+    }
+    return {};
+  };
+
+  const { data: betsData, isLoading, isError } = useGetAllBetsQuery(getQueryParams(startDate, endDate))
 
   const columns = useMemo(
     () => [

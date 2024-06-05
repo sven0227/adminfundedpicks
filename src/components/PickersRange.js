@@ -18,6 +18,7 @@ const PickersRange = (props) => {
   const setEndDate = props.setEndDate
 
   const handleOnChange = dates => {
+    console.log('>>> ', dates)
     const [start, end] = dates
 
     setStartDate(start)
@@ -40,6 +41,7 @@ const PickersRange = (props) => {
       <Grid item xs={6} mb={2}>
         <AppReactDatepicker
           selectsRange
+<<<<<<< Updated upstream
           endDate={endDate}
           selected={startDate}
           startDate={startDate}
@@ -47,6 +49,23 @@ const PickersRange = (props) => {
           onChange={handleOnChange}
           shouldCloseOnSelect={false}
           customInput={<CustomInput label='Date Range' start={startDate} end={endDate} />}
+=======
+          monthsShown={2}
+          endDate={endDate ?? ""}
+          selected={startDate ?? ""}
+          startDate={startDate ?? ""}
+          slotProps={{ field: { clearable: true } }}
+          shouldCloseOnSelect={false}
+          id='date-range-picker-months'
+          onChange={handleOnChange}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              disabled={true}
+            />
+          )}
+          customInput={<CustomInput label='Multiple Months' end={endDate ?? addDays(new Date(), 15)} start={startDate ?? new Date()} />}
+>>>>>>> Stashed changes
         />
       </Grid>
     </Grid>
