@@ -13,7 +13,10 @@ export const purchaseApi = createApi({
   tagTypes: ['purchases', 'purchase'],
   endpoints: builder => ({
     getAllPurchases: builder.query({
-      queryFn: () => queryFn(purchase_url),
+      query: ({ startDate, endDate }) => ({
+        url: `${purchase_url}?created_at_after=${startDate}&created_at_before=${endDate}`,
+        method: 'GET'
+      }),
       providesTags: ['purchases']
     }),
     createPurchase: builder.mutation({
