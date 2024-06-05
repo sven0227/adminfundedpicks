@@ -40,13 +40,14 @@ const PickersRange = (props) => {
       <Grid item xs={6} mb={2}>
         <AppReactDatepicker
           selectsRange
+          monthsShown={2}
           endDate={endDate}
           selected={startDate}
           startDate={startDate}
-          id='date-range-picker'
-          onChange={handleOnChange}
           shouldCloseOnSelect={false}
-          customInput={<CustomInput label='Date Range' start={startDate} end={endDate} />}
+          id='date-range-picker-months'
+          onChange={handleOnChange}
+          customInput={<CustomInput label='Multiple Months' end={endDate} start={startDate} />}
         />
       </Grid>
     </Grid>

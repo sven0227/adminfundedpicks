@@ -7,6 +7,7 @@ import Globe from 'react-globe.gl'
 import { useGetAllUsersQuery } from '@/redux-store/api/user'
 import dynamic from 'next/dynamic'
 import Loader from '@/components/loader'
+import { Box, Card, Stack, Typography } from '@mui/material'
 
 const Users = () => {
   const { data: usersData, isLoading, isError } = useGetAllUsersQuery()
@@ -16,7 +17,6 @@ const Users = () => {
 
   useEffect(() => {
     if (usersData?.length > 0) {
-      console.log('>>>', usersData)
       const latLongData = []
 
       usersData.map(user => {
@@ -29,7 +29,6 @@ const Users = () => {
           })
         }
       })
-      console.log('latLongDataL ', latLongData)
       setPointsData(latLongData)
       fetch('https://globe.gl/example/datasets/ne_110m_populated_places_simple.geojson')
         .then(res => res.json())
@@ -40,9 +39,10 @@ const Users = () => {
   return (
     <div className='App'>
       {typeof window !== undefined && usersData?.length > 0 ? (
+      <Box display={'flex'} justifyContent={'space-between'} alignItems={'flex-start'} position={'relative'}>
         <Globe
-          width={'100%'}
-          height={'100%'}
+          width={[1080]}
+          height={[650]}
           pointsData={pointsData}
           pointLabel={p => p.user}
           pointColor={() => 'red'}
@@ -58,6 +58,19 @@ const Users = () => {
           labelColor={() => 'rgba(255, 165, 0, 0.75)'}
           labelResolution={2}
         />
+        <Box p={2} m={2} border={'1px solid gray'} borderRadius={'4px'} position={'absolute'} top={0} minWidth={'400px'}>
+            {usersData.map((user, index) => {
+              return user?.geo_data?.city.length > 0 && <Box key={index} display={'flex'} justifyContent={'space-between'} alignItems={'center'}>
+                <Typography mr={5}>{user?.username}</Typography>
+                <Box display={'flex'}>
+                  <Typography>{user?.geo_data?.city}</Typography>
+                  <Typography ml={1}>{user?.geo_data?.country_code}</Typography>
+                </Box>
+              </Box>
+            })
+            }
+        </Box>
+      </Box>
       ) : isLoading ? (
         <Loader />
       ) : null}

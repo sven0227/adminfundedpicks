@@ -26,7 +26,10 @@ import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
 import Table from '@/components/table'
-import { currencyFormatter } from '../utils'
+import { convertDateFormat, currencyFormatter } from '../utils'
+import { Box } from '@mui/material'
+import PickersRange from '@/components/PickersRange'
+import { addDays } from 'date-fns'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -46,10 +49,14 @@ const columnHelper = createColumnHelper()
 
 const Purchases = () => {
   // States
+  const today = new Date();
+  const fifteenDaysFromToday = addDays(new Date(), 15)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery()
   const [deletePurchase, { isLoading: isDeleting }] = useDeletePurchaseMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
+  const [startDate, setStartDate] = useState(today)
+  const [endDate, setEndDate] = useState(fifteenDaysFromToday)
+  const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery({ startDate: convertDateFormat(startDate), endDate: convertDateFormat(endDate ?? fifteenDaysFromToday) })
 
   const columns = useMemo(
     () => [
@@ -161,6 +168,9 @@ const Purchases = () => {
         isLoading={isDeleting}
         deleteHandler={deletePurchaseHandler}
       />
+      <Box>
+        <PickersRange startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+      </Box>
       <Table title='Purchases' tableColumns={columns} tableData={purchasesData} />
     </>
   )
