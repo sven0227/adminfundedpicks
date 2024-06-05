@@ -24,9 +24,9 @@ import tableStyles from '@core/styles/table.module.css'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
-import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
 import Table from '@/components/table'
 import { currencyFormatter } from '../utils'
+import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -47,11 +47,8 @@ const columnHelper = createColumnHelper()
 const Purchases = () => {
   // States
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery()
   const [deletePurchase, { isLoading: isDeleting }] = useDeletePurchaseMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
-<<<<<<< Updated upstream
-=======
   const [startDate, setStartDate] = useState(today)
   const [endDate, setEndDate] = useState(fifteenDaysFromToday)
 
@@ -63,7 +60,6 @@ const Purchases = () => {
   };
 
   const { data: purchasesData, isLoading, isError } = useGetAllPurchasesQuery(getQueryParams(startDate, endDate))
->>>>>>> Stashed changes
 
   const columns = useMemo(
     () => [

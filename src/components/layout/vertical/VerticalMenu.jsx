@@ -78,12 +78,12 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <MenuItem href='/accounts/profit'>Profit</MenuItem>
           <MenuItem href='/accounts/withdrawal'>Withdrawals</MenuItem>
         </SubMenu>
-        <MenuItem href='/withdrawal-profit' icon={<i className='ri-archive-drawer-fill' />}>
+        {/* <MenuItem href='/withdrawal-profit' icon={<i className='ri-archive-drawer-fill' />}>
           Withdrawals Profit
-        </MenuItem>
+        </MenuItem> */}
         <SubMenu label='Users' icon={<i className='ri-user-3-fill' />}>
           <MenuItem href='/users'>Users</MenuItem>
-          <MenuItem
+          {/* <MenuItem
             href='/prop-accounts/events
 '
           >
@@ -107,19 +107,19 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
 '
           >
             Snapshot
-          </MenuItem>
+          </MenuItem>*/}
           <MenuItem
             href='/prop-accounts/ip-logs
 '
           >
             IP logs
           </MenuItem>
-          <MenuItem
+          {/* <MenuItem
             href='/prop-accounts/passwords
 '
           >
             Password
-          </MenuItem>
+          </MenuItem> */}
         </SubMenu>
 
         <MenuItem href='/bets' icon={<i className='ri-cash-line' />}>
@@ -133,14 +133,14 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           Commerce
         </MenuItem>
 
-        <MenuItem href='/coupons' icon={<i className='ri-terminal-window-line' />}>
+        {/* <MenuItem href='/coupons' icon={<i className='ri-terminal-window-line' />}>
           Coupons
-        </MenuItem>
-        <MenuItem href='/affiliates' icon={<i className='ri-chat-poll-line' />}>
+        </MenuItem> */}
+        {/* <MenuItem href='/affiliates' icon={<i className='ri-chat-poll-line' />}>
           Affiliates
-        </MenuItem>
+        </MenuItem> */}
 
-        <SubMenu label='Payouts' icon={<i className='ri-money-dollar-circle-fill' />}>
+        {/* <SubMenu label='Payouts' icon={<i className='ri-money-dollar-circle-fill' />}>
           <MenuItem
             href='/payout/pendings
 '
@@ -174,7 +174,7 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
         </SubMenu>
         <MenuItem href='/blacklister' icon={<i className='ri-chat-off-fill' />}>
           Blacklister
-        </MenuItem>
+        </MenuItem> */}
       </Menu>
       {/* <Menu
           popoutMenuOffset={{ mainAxis: 17 }}
