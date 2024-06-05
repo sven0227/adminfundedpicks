@@ -11,6 +11,7 @@ import Loader from '@/components/loader'
 import LastWeekReport from './components/LastWeekReport'
 import WeeklyReport from './components/WeeklyReport'
 import moment from 'moment'
+import TotalTransactions from '@/views/dashboards/analytics/TotalTransactions'
 
 // Server Action Imports
 
@@ -48,7 +49,11 @@ const DashboardAnalytics = () => {
         </Grid>
       ))}
 
-      <Grid item xs={12}>
+      <Grid item xs={12} md={12}>
+        <TotalTransactions dashboardData={dashboardData} />
+      </Grid>
+
+      {/* <Grid item xs={12}>
         <WeeklyReport
           data={Object.values(transactions_this_week).map(transaction => transaction || 0)}
           categories={Object.keys(transactions_this_week).map(date => moment(date).format('MMM DD YYYY'))}
@@ -59,7 +64,7 @@ const DashboardAnalytics = () => {
           data={Object.values(transactions_last_week).map(transaction => transaction || 0)}
           categories={Object.keys(transactions_last_week).map(date => moment(date).format('MMM DD YYYY'))}
         />
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }

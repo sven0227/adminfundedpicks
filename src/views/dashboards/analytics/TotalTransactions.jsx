@@ -19,24 +19,59 @@ import OptionMenu from '@core/components/option-menu'
 
 // Util Imports
 import { rgbaToHex } from '@/utils/rgbaToHex'
+import { useEffect, useState } from 'react'
 
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
 
-const series = [
-  {
+const TotalTransactions = (props) => {
+  // Hooks
+  const theme = useTheme()
+  const [seriesData, setSeriesData] = useState([{
     name: 'Last Week',
-    data: [83, 153, 213, 279, 213, 153, 83]
+    data: []
   },
   {
     name: 'This Week',
-    data: [-84, -156, -216, -282, -216, -156, -84]
-  }
-]
+    data: []
+  }]);
+  const [seriesPercentages, setSeriesPercentages] = useState({});
+  const dashboardData = props.dashboardData;
 
-const TotalTransactions = () => {
-  // Hooks
-  const theme = useTheme()
+  useEffect(() => {
+    if (dashboardData) {
+      const thisWeekValues = Object.values(dashboardData.transactions_this_week).map((item) => item ? item : 0);
+      for (let i = 0; i < 7; i++) {
+        if (i < thisWeekValues.length) {
+          if (thisWeekValues[i] === null) {
+            thisWeekValues[i] = 0;
+          }
+        } else {
+          thisWeekValues.push(0);
+        }
+      }
+      setSeriesData([
+        {
+          name: 'Last Week',
+          data: Object.values(dashboardData.transactions_last_week).map((item) => item ? item : 0)
+          // data: [83, 153, 0, 279, -0, 0, 0]
+        },
+        {
+          name: 'This Week',
+          data: thisWeekValues
+          // data: [831, 53, 1213, -279, 0, 153, 83]
+        }
+      ])
+      const total_this_week = Object.values(dashboardData.transactions_this_week).reduce((a, b) => a + b, 0)
+      const total_last_week = Object.values(dashboardData.transactions_last_week).reduce((a, b) => a + b, 0)
+      const percentage_change = (((total_this_week - total_last_week) / total_last_week) * 100).toFixed(1)
+      let change_icon = "";
+      if (percentage_change > 0) {
+        change_icon = "+"
+      } else change_icon = "-"
+      setSeriesPercentages({ percentage_change, change_icon })
+    }
+  }, [dashboardData])
 
   // Vars
 
@@ -106,15 +141,15 @@ const TotalTransactions = () => {
         <Grid item xs={12} sm={7} className='max-sm:border-be sm:border-ie flex flex-col'>
           <CardHeader title='Total Transactions' />
           <CardContent className='flex flex-grow flex-col justify-center pbs-5'>
-            <AppReactApexCharts type='bar' height={232} series={series} options={options} />
+            <AppReactApexCharts type='bar' height={232} series={seriesData} options={options} />
           </CardContent>
         </Grid>
         <Grid item xs={12} sm={5} className='flex flex-col'>
-          <CardHeader
+          {/* <CardHeader
             title='Report'
             subheader='Last month transactions $234.40k'
             action={<OptionMenu options={['Refresh', 'Update', 'Share']} />}
-          />
+          /> */}
           <CardContent className='flex flex-grow flex-col justify-center'>
             <div className='flex flex-col gap-5'>
               <div className='flex justify-evenly'>
@@ -125,11 +160,11 @@ const TotalTransactions = () => {
                   <div className='flex flex-col items-center gap-0.5'>
                     <Typography>This Week</Typography>
                     <Typography color='text.primary' className='font-medium'>
-                      +82.45%
+                      {seriesPercentages.percentage_change}%
                     </Typography>
                   </div>
                 </div>
-                <Divider orientation='vertical' flexItem />
+                {/* <Divider orientation='vertical' flexItem />
                 <div className='flex flex-col gap-3 items-center'>
                   <CustomAvatar skin='light' color='primary' variant='rounded'>
                     <i className='ri-money-dollar-circle-line' />
@@ -137,13 +172,13 @@ const TotalTransactions = () => {
                   <div className='flex flex-col items-center gap-0.5'>
                     <Typography>Last Week</Typography>
                     <Typography color='text.primary' className='font-medium'>
-                      -24.86%
+
                     </Typography>
                   </div>
-                </div>
+                </div> */}
               </div>
-              <Divider />
-              <div className='flex flex-wrap gap-3 items-center justify-around '>
+              {/* <Divider /> */}
+              {/* <div className='flex flex-wrap gap-3 items-center justify-around '>
                 <div className='flex flex-col items-center gap-0.5'>
                   <Typography>Performance</Typography>
                   <Typography color='text.primary' className='font-medium'>
@@ -153,7 +188,7 @@ const TotalTransactions = () => {
                 <div>
                   <Button variant='contained'>View Report</Button>
                 </div>
-              </div>
+              </div> */}
             </div>
           </CardContent>
         </Grid>
