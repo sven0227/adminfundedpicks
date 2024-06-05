@@ -13,7 +13,10 @@ export const betApi = createApi({
   tagTypes: ['bets', 'bet'],
   endpoints: builder => ({
     getAllBets: builder.query({
-      queryFn: () => queryFn(bet_url),
+      query: ({ startDate, endDate }) => ({
+        url: `${bet_url}?created_at_after=${startDate}&created_at_before=${endDate}`,
+        method: 'GET'
+      }),
       providesTags: ['bets', 'bet']
     }),
     createBet: builder.mutation({

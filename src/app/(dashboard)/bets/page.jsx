@@ -12,6 +12,7 @@ import IconButton from '@mui/material/IconButton'
 
 // Third-party Imports
 import { rankItem } from '@tanstack/match-sorter-utils'
+import { format, addDays } from 'date-fns'
 import {
   createColumnHelper,
   getCoreRowModel,
@@ -33,8 +34,10 @@ import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import { useDeleteBetMutation, useGetAllBetsQuery } from '@/redux-store/api/bet'
 import Table from '@/components/table'
-import { currencyFormatter } from '../utils'
+import { convertDateFormat, currencyFormatter } from '../utils'
 import { formatDateShort, formatDateToMonthShort } from '@/views/apps/chat/utils'
+import { Box } from '@mui/material'
+import PickersRange from '@/components/PickersRange'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -53,39 +56,20 @@ const fuzzyFilter = (row, columnId, value, addMeta) => {
 const columnHelper = createColumnHelper()
 
 const Bets = () => {
+  const today = new Date();
+  const fifteenDaysFromToday = addDays(new Date(), 15)
   // States
   const [rowSelection, setRowSelection] = useState({})
   const [showDeleteModal, setShowDeleteModal] = useState(false)
-  const { data: betsData, isLoading, isError } = useGetAllBetsQuery()
   const [deletePurchase, { isLoading: isDeleting }] = useDeleteBetMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
-
+  const [startDate, setStartDate] = useState(today)
+  const [endDate, setEndDate] = useState(fifteenDaysFromToday)
   const [globalFilter, setGlobalFilter] = useState('')
+  const { data: betsData, isLoading, isError } = useGetAllBetsQuery({ startDate: convertDateFormat(startDate), endDate: convertDateFormat(endDate ?? fifteenDaysFromToday) })
 
   const columns = useMemo(
     () => [
-      // {
-      //   id: 'select',
-      //   header: ({ table }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: table.getIsAllRowsSelected(),
-      //         indeterminate: table.getIsSomeRowsSelected(),
-      //         onChange: table.getToggleAllRowsSelectedHandler()
-      //       }}
-      //     />
-      //   ),
-      //   cell: ({ row }) => (
-      //     <Checkbox
-      //       {...{
-      //         checked: row.getIsSelected(),
-      //         disabled: !row.getCanSelect(),
-      //         indeterminate: row.getIsSomeSelected(),
-      //         onChange: row.getToggleSelectedHandler()
-      //       }}
-      //     />
-      //   )
-      // },
       columnHelper.accessor('created_at', {
         header: 'Created At',
         cell: ({ row }) => {
@@ -123,9 +107,6 @@ const Bets = () => {
         cell: ({ row }) => (
           <div className='flex items-center gap-0.5'>
             <IconButton size='small'>
-              {/* <Link href={`/apps/invoice/preview/${row.original.id}`} className='flex'>
-                <i className='ri-eye-line text-textSecondary' />
-              </Link> */}
             </IconButton>
             <IconButton size='small'>
               <Link href={`/bets/${row.original.id}`} className='flex'>
@@ -146,7 +127,6 @@ const Bets = () => {
         enableSorting: false
       })
     ],
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
 
@@ -207,6 +187,9 @@ const Bets = () => {
         isLoading={isDeleting}
         deleteHandler={deletePurchaseHandler}
       />
+      <Box>
+        <PickersRange startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+      </Box>
       <Table tableColumns={columns} tableData={betsData} link='/bets/create' btnText='Create Bet' />
     </>
   )
