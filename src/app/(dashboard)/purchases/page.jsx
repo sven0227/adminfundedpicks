@@ -25,8 +25,11 @@ import Loader from '@/components/loader'
 import Error from '@/components/error'
 import WarningModal from '@/components/modal/warning'
 import Table from '@/components/table'
-import { currencyFormatter } from '../utils'
+import { convertDateFormat, currencyFormatter } from '../utils'
 import { useDeletePurchaseMutation, useGetAllPurchasesQuery } from '@/redux-store/api/purchase'
+import { addDays } from 'date-fns'
+import { Box } from '@mui/material'
+import PickersRange from '@/components/PickersRange'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -46,6 +49,8 @@ const columnHelper = createColumnHelper()
 
 const Purchases = () => {
   // States
+  const today = new Date();
+  const fifteenDaysFromToday = addDays(new Date(), 15)
   const [showDeleteModal, setShowDeleteModal] = useState(false)
   const [deletePurchase, { isLoading: isDeleting }] = useDeletePurchaseMutation()
   const [selectedPurchaseId, setSelectedPurchaseId] = useState('')
@@ -171,6 +176,9 @@ const Purchases = () => {
         isLoading={isDeleting}
         deleteHandler={deletePurchaseHandler}
       />
+      <Box>
+        <PickersRange startDate={startDate} setStartDate={setStartDate} endDate={endDate} setEndDate={setEndDate} />
+      </Box>
       <Table title='Purchases' tableColumns={columns} tableData={purchasesData} />
     </>
   )
