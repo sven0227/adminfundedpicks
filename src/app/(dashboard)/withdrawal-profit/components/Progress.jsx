@@ -11,6 +11,7 @@ import { useColorScheme, useTheme } from '@mui/material/styles'
 
 // Util Imports
 import { rgbaToHex } from '@/utils/rgbaToHex'
+import { abs } from 'stylis'
 
 // Styled Component Imports
 const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexCharts'))
@@ -18,7 +19,7 @@ const AppReactApexCharts = dynamic(() => import('@/libs/styles/AppReactApexChart
 // Vars
 
 const Progress = ({ progress }) => {
-  const series = [(+progress).toFixed(1)]
+  const series = [((+progress)).toFixed(1)]
   // Hooks
   const theme = useTheme()
 
@@ -86,6 +87,14 @@ const Progress = ({ progress }) => {
         }
       }
     ]
+  }
+
+  if (series[0] < 0) {
+    // options.plotOptions.radialBar.startAngle = -0;
+    // options.plotOptions.radialBar.endAngle = -360;
+    options.colors = ['#FF0000'];  // Red color for negative values
+    options.plotOptions.radialBar.inverseOrder = true
+    // series[0] = Math.abs(series[0]);  // Use the absolute value for display
   }
 
   return (

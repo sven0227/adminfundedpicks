@@ -12,6 +12,9 @@ import Loss from '../components/Loss'
 import Profits from '../components/Profits'
 import Progress from '../components/Progress'
 import Account from '../components/Account'
+import { abs } from 'stylis'
+import { convertDateFormat, currencyFormatter } from '../../utils'
+import { addDays } from 'date-fns'
 
 const WidthdrawDetails = () => {
   const [isChecking, setIsChecking] = useState(true)
@@ -91,18 +94,6 @@ const WidthdrawDetails = () => {
     purchase = {}
   } = challengeStatusData || {}
 
-  const {
-    id: purchase_id = '',
-    amount = '',
-    product = '',
-    created_at: purchase_created_at = '',
-    updated_at: purchase_updated_at = '',
-    payment_method = '',
-    transaction_id = '',
-    payment_status = '',
-    user: purchase_user = ''
-  } = purchase || {}
-
   return (
     <>
       <Grid container spacing={2}>
@@ -114,8 +105,8 @@ const WidthdrawDetails = () => {
                 <Info title='Name' subtitle={first_name ? first_name + ' ' + last_name : 'N/A'} />
                 <Info title='Username' subtitle={username} />
                 <Info title='Email' subtitle={email} />
-                <Info title='Target' subtitle={`$${target}`} />
-                <Info title='Starting Amount' subtitle={`$${starting_amount}`} />
+                <Info title='Target' subtitle={`${currencyFormatter.format(target)}`} />
+                <Info title='Starting Amount' subtitle={`${currencyFormatter.format(starting_amount)}`} />
                 <Info title='Date Joined' subtitle={moment(date_joined).format('DD-MM-YYYY')} />
                 <Info title='Staff' subtitle={is_staff ? 'Yes' : 'No'} />
                 <Info title='Active' subtitle={is_active ? 'Yes' : 'No'} isLast />
@@ -131,14 +122,14 @@ const WidthdrawDetails = () => {
             </Grid>
             <Grid item sm={6}>
               <Grid container spacing={2}>
-                <Grid item sm={6}>
-                  <Profits profit={profit_percent} />
-                </Grid>
-                <Grid item sm={6}>
+                {/* <Grid item sm={6}>
+                  <Profits profit={profit} />
+                </Grid> */}
+                <Grid item sm={12}>
                   <Progress progress={progress_percentage} />
                 </Grid>
                 <Grid item sm={12}>
-                  <Loss loss={maximum_loss} dailyLoss={max_daily_loss} />
+                  <Loss loss={profit <= 0 ? abs(profit) : 0} dailyLoss={daily_nets[Object.keys(daily_nets).filter((k) => k === convertDateFormat(new Date()))]} />
                 </Grid>
               </Grid>
             </Grid>

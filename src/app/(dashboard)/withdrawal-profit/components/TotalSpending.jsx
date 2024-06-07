@@ -177,7 +177,7 @@ const TotalSpending = ({ sales, categories }) => {
 
   return (
     <Card>
-      <CardHeader title='Total Spending' />
+      <CardHeader title='Bet Results' />
       <CardContent>
         <AppReactApexCharts type='line' height={232} series={series} options={options} />
         {/* <div className='flex flex-col justify-center gap-6 mbs-6'>

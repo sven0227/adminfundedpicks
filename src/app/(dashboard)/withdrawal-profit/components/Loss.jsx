@@ -8,6 +8,7 @@ import CardContent from '@mui/material/CardContent'
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
+import { currencyFormatter } from '../../utils'
 
 const Loss = ({ loss, dailyLoss }) => {
   return (
@@ -26,7 +27,7 @@ const Loss = ({ loss, dailyLoss }) => {
               </CustomAvatar>
               <Typography>Total Loss</Typography>
             </div>
-            <Typography variant='h4'>${loss}</Typography>
+            <Typography variant='h4'>{currencyFormatter.format(loss)}</Typography>
           </div>
           <Divider flexItem orientation='vertical' sx={{ '& .MuiDivider-wrapper': { p: 0, py: 2 } }}>
             <CustomAvatar skin='light' color='secondary' size={28} className='bg-actionSelected'>
@@ -35,12 +36,12 @@ const Loss = ({ loss, dailyLoss }) => {
           </Divider>
           <div className='flex flex-col items-end gap-2'>
             <div className='flex items-center gap-x-2'>
-              <Typography>Daily Loss</Typography>
+              <Typography>Today`s Loss</Typography>
               <CustomAvatar size={24} variant='rounded' skin='light' className='rounded' color='primary'>
                 <i className='ri-blaze-line' />
               </CustomAvatar>
             </div>
-            <Typography variant='h4'>${dailyLoss}</Typography>
+            <Typography variant='h4'>{currencyFormatter.format(dailyLoss)}</Typography>
           </div>
         </div>
         {/* <LinearProgress value={26} color='warning' variant='determinate' className='bs-2' /> */}

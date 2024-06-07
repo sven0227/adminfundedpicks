@@ -6,24 +6,25 @@ import Typography from '@mui/material/Typography'
 
 // Components Imports
 import CustomAvatar from '@core/components/mui/Avatar'
+import { currencyFormatter } from '../../utils'
 
 const Account = ({ accountBalance, profit, alv, funds }) => {
   const data = [
     {
-      stats: `$${accountBalance}`,
+      stats: `${currencyFormatter.format(accountBalance)}`,
       color: 'primary',
       title: 'Account Balance',
       icon: 'ri-user-star-line'
     },
     {
-      stats: `$${profit}`,
+      stats: `${currencyFormatter.format(profit)}`,
       color: 'warning',
       icon: 'ri-pie-chart-2-line',
       title: 'Total Profit'
     },
     {
       color: 'info',
-      stats: `$${funds}`,
+      stats: `${currencyFormatter.format(funds)}`,
       title: 'Funds',
       icon: 'ri-funds-fill'
     },
