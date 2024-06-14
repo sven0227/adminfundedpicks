@@ -39,15 +39,28 @@ const InprogressAccount = () => {
   // States
 
   const { data: challengeStatusData, isLoading, isError } = useGetChallengeStatusQuery()
-  const [globalFilter, setGlobalFilter] = useState('')
-
-  const [challengeData, setChallengeData] = useState([])
+  const [globalFilter, setGlobalFilter] = useState('');
+  const [updatedData, setUpdatedData] = useState([]);
 
   useEffect(() => {
     if (challengeStatusData) {
-      setChallengeData(challengeStatusData?.filter(item => item.status == 'active') || [])
+      const inProgress = challengeStatusData.filter((item) => {
+        if (item.stats.profit > 0) {
+          return item
+        }
+        else if (item.stats.profit < 0) {
+          if (Math.abs(item.stats.profit) < item.stats.maximum_loss){
+            const objectClone = { ...item };
+            objectClone.status = 'active';
+            return objectClone;
+          }
+        }
+        return null;  // Explicitly return null for items that don't meet the criteria
+      }).filter(item => item !== null); // Filter out null items
+
+      setUpdatedData(inProgress);
     }
-  }, [challengeStatusData])
+  }, [challengeStatusData]);
 
   if (isLoading) {
     return <Loader />
@@ -58,7 +71,7 @@ const InprogressAccount = () => {
   }
 
   // delete handler
-  return <WithdrawTable data={challengeData} title='In Progress accounts' />
+  return <WithdrawTable data={updatedData} title='In Progress accounts' />
 }
 
 export default InprogressAccount
