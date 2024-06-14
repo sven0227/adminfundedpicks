@@ -12,6 +12,7 @@ import { useGetChallengeStatusQuery } from '@/redux-store/api/challenge-status'
 import Loader from '@/components/loader'
 import Error from '@/components/error'
 import WithdrawTable from '@/components/withdrawel-table'
+import { abs } from 'stylis'
 
 const fuzzyFilter = (row, columnId, value, addMeta) => {
   // Rank the item
@@ -35,12 +36,24 @@ const InprogressAccount = () => {
   const { data: challengeStatusData, isLoading, isError } = useGetChallengeStatusQuery()
 
   const [challengeData, setChallengeData] = useState([])
+  const [updatedData, setUpdatedData] = useState([]);
 
   useEffect(() => {
     if (challengeStatusData) {
-      setChallengeData(challengeStatusData?.filter(item => item.status == 'failed') || [])
+      const failed = challengeStatusData.map((item) => {
+        if (item.stats.profit < 0) {
+          if (Math.abs(item.stats.profit) >= item.stats.maximum_loss){
+            const objectClone = { ...item };
+            objectClone.status = 'failed';
+            return objectClone;
+          }
+        }
+        return null;  // Explicitly return null for items that don't meet the criteria
+      }).filter(item => item !== null); // Filter out null items
+
+      setUpdatedData(failed);
     }
-  }, [challengeStatusData])
+  }, [challengeStatusData]);
 
   if (isLoading) {
     return <Loader />
@@ -51,7 +64,7 @@ const InprogressAccount = () => {
   }
 
   // delete handler
-  return <WithdrawTable data={challengeData} title='Failed accounts' />
+  return <WithdrawTable data={updatedData} title='Failed accounts' />
 }
 
 export default InprogressAccount

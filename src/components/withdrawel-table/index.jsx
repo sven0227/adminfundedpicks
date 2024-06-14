@@ -73,7 +73,7 @@ const WithdrawTable = ({ data, title }) => {
       columnHelper.accessor('status', {
         header: 'Status',
         cell: ({ row }) => (
-          <Chip variant='tonal' className='capitalize' label={row?.original?.status} color='success' size='small' />
+          <Chip variant='tonal' className='capitalize' label={row?.original?.status} color={ row?.original?.status === 'failed' ? 'error' : 'success'} size='small' />
         )
       }),
       columnHelper.accessor('action', {
