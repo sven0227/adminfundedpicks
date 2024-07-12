@@ -1,6 +1,6 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
-import { base_url, getAuthToken, user_url } from '../../utils/apiUrls'
-import { queryFn } from '@/utils'
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { base_url, getAuthToken, user_url } from '../../utils/apiUrls';
+import { queryFn } from '@/utils';
 
 export const userApi = createApi({
   reducerPath: 'userApi',
@@ -11,21 +11,29 @@ export const userApi = createApi({
     }
   }),
   tagTypes: ['users', 'user'],
-  endpoints: builder => ({
+  endpoints: (builder) => ({
     getAllUsers: builder.query({
       queryFn: () => queryFn(user_url),
       providesTags: ['users']
     }),
     createUser: builder.mutation({
-      query: data => ({
-        url: user_url,
-        method: 'POST',
-        body: data
-      }),
+      query: ({ firstName, lastName, email, amount }) => {
+        console.log('amount: ',amount);
+        const params = ['package=demo-account'];
+        if (firstName) params.push(`first_name=${firstName}`);
+        if (lastName) params.push(`last_name=${lastName}`);
+        if (email) params.push(`user=${email}`);
+        if (amount) params.push(`amount_subtotal=${amount}`);
+        const queryString = params.length ? `?${params.join('&')}` : '';
+        return {
+          url: `/create_demo_account${queryString}`,
+          method: 'GET'
+        };
+      },
       invalidatesTags: ['users']
     }),
     getUser: builder.query({
-      queryFn: id => queryFn(`${user_url}${id}`)
+      queryFn: (id) => queryFn(`${user_url}${id}`)
     }),
     updateUser: builder.mutation({
       query: ({ id, data }) => ({
@@ -36,14 +44,14 @@ export const userApi = createApi({
       invalidatesTags: ['users', 'user']
     }),
     deleteUser: builder.mutation({
-      query: id => ({
+      query: (id) => ({
         url: `${user_url}${id}/`,
         method: 'DELETE'
       }),
       invalidatesTags: ['users']
     })
   })
-})
+});
 
 export const {
   useCreateUserMutation,
@@ -51,4 +59,4 @@ export const {
   useGetUserQuery,
   useUpdateUserMutation,
   useDeleteUserMutation
-} = userApi
+} = userApi;
