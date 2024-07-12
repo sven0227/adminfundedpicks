@@ -24,6 +24,7 @@ import { useState } from 'react'
 const schema = object({
   email: string([minLength(6, 'Email is required')]),
   firstName: string([minLength(1, 'First name is required')]),
+  password: string([minLength(1, 'Password is required')]),
   lastName: string([minLength(1, 'Last name is required')])
 });
 
@@ -52,7 +53,8 @@ const CreateUser = () => {
     defaultValues: {
       email: '',
       firstName: '',
-      lastName: ''
+      lastName: '',
+      password: ''
     }
   })
 
@@ -101,6 +103,15 @@ const CreateUser = () => {
                 name='email'
                 placeholder='Enter email'
                 {...(errors.email && { error: true, helperText: errors.email.message })}
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <FormControl
+                control={control}
+                label='Password'
+                name='password'
+                placeholder='Enter password'
+                {...(errors.password && { error: true, helperText: errors.password.message })}
               />
             </Grid>
             <Grid item xs={6} alignItems={'center'}>

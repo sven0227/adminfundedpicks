@@ -17,13 +17,13 @@ export const userApi = createApi({
       providesTags: ['users']
     }),
     createUser: builder.mutation({
-      query: ({ firstName, lastName, email, amount }) => {
-        console.log('amount: ',amount);
+      query: ({ firstName, lastName, email, amount, password }) => {
         const params = ['package=demo-account'];
         if (firstName) params.push(`first_name=${firstName}`);
         if (lastName) params.push(`last_name=${lastName}`);
         if (email) params.push(`user=${email}`);
         if (amount) params.push(`amount_subtotal=${amount}`);
+        if (password) params.push(`password=${password}`);
         const queryString = params.length ? `?${params.join('&')}` : '';
         return {
           url: `/create_demo_account${queryString}`,
