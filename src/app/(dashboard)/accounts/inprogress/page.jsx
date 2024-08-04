@@ -48,7 +48,7 @@ const InprogressAccount = () => {
         if (item.stats.profit > 0) {
           return item
         }
-        else if (item.stats.profit < 0) {
+        else if (item.stats.profit <= 0) {
           if (Math.abs(item.stats.profit) < item.stats.maximum_loss){
             const objectClone = { ...item };
             objectClone.status = 'active';

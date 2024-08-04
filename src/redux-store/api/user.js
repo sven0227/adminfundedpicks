@@ -35,6 +35,9 @@ export const userApi = createApi({
     getUser: builder.query({
       queryFn: (id) => queryFn(`${user_url}${id}`)
     }),
+    getUserDocs: builder.query({
+      queryFn: (id) => queryFn(`get_user_documents/${id}`)
+    }),
     updateUser: builder.mutation({
       query: ({ id, data }) => ({
         url: `${user_url}${id}/`,
