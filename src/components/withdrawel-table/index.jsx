@@ -58,6 +58,12 @@ const WithdrawTable = ({ data, title }) => {
           return <Typography variant='body2'>{row.original.user.username}</Typography>
         }
       }),
+      columnHelper.accessor('user.approved_for_phase2', {
+        header: 'Approved for p2',
+        cell: ({ row }) => {
+          return <Typography variant='body2'>{row.original.user.approved_for_phase2.toString()}</Typography>
+        }
+      }),
       columnHelper.accessor('purchase.product', {
         header: 'Product',
         cell: ({ row }) => <Typography variant='body2'>{row.original.purchase?.product || 'N/A'}</Typography>
