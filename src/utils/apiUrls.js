@@ -9,6 +9,9 @@ export const login_url = '/sign-in/'
 export const user_url = '/users/'
 export const purchase_url = '/purchases/'
 export const bet_url = '/bets/'
+export const payout_url = '/payouts/list/'
+export const payout_detail_url = '/payouts/'
+export const payout_update_url = 'payouts/update/'
 
 export const challenge_status_url = '/challenge-status/'
 

@@ -14,6 +14,7 @@ import auth from './slices/auth'
 import { challengeStatusApi } from './api/challenge-status'
 import { dashboardApi } from './api/dashboard'
 import { challengeApi } from './api/challenge'
+import { payoutApi } from './api/payout'
 
 export const store = configureStore({
   reducer: {
@@ -24,6 +25,7 @@ export const store = configureStore({
     [betApi.reducerPath]: betApi.reducer,
     [challengeStatusApi.reducerPath]: challengeStatusApi.reducer,
     [challengeApi.reducerPath]: challengeApi.reducer,
+    [payoutApi.reducerPath]: payoutApi.reducer,
     user: userDataSlice,
     auth: auth,
     chatReducer,
@@ -38,6 +40,7 @@ export const store = configureStore({
       purchaseApi.middleware,
       betApi.middleware,
       challengeStatusApi.middleware,
-      challengeApi.middleware
+      challengeApi.middleware,
+      payoutApi.middleware
     ])
 })
