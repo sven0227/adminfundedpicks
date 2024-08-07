@@ -129,10 +129,10 @@ const VerticalMenu = ({ dictionary, scrollMenu }) => {
           <MenuItem href='/report/spenders'>Top spenders</MenuItem>
           <MenuItem href='/report/users'>Global user report</MenuItem>
         </SubMenu>
-        <MenuItem href='/applications' icon={<i className='ri-voice-recognition-line' />}>
+        <MenuItem href='/applications' icon={<i className='ri-terminal-window-line' />}>
           Applications
         </MenuItem>
-        <MenuItem href='/payouts' icon={<i className='ri-voice-recognition-line' />}>
+        <MenuItem href='/payouts' icon={<i className='ri-money-dollar-circle-fill' />}>
           Payouts
         </MenuItem>
         <MenuItem href='/commerce' icon={<i className='ri-voice-recognition-line' />}>
